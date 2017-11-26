@@ -15,12 +15,12 @@
             android:id="@+id/btn_PcOnOff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_PcOnOff" />
+            android:text="@string/btn_pcOnOff" />
 
         <Button
             android:id="@+id/btn_PcRestart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_PcRestart" />
+            android:text="@string/btn_pcRestart" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

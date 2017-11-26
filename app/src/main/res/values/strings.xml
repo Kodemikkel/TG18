@@ -31,6 +31,13 @@
     <string name="btn_fade">FADE</string>
     <string name="btn_smooth">SMOOTH</string>
 
-    <string name="btn_PcOnOff">On/Off</string>
-    <string name="btn_PcRestart">Restart</string>
+    <string name="btn_pcOnOff">On/Off</string>
+    <string name="btn_pcRestart">Restart</string>
+
+    <string name="title_lightControl">Light control</string>
+    <string name="title_heightControl">Height control</string>
+    <string name="title_pcControl">PC control</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
