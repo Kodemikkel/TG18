@@ -7,12 +7,11 @@
     tools:context="eu.dromnes.tg18.tg18.LightControl">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,247 +19,309 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
 
             <Button
                 android:id="@+id/btn_dimUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="0"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/white"
                 android:text="@string/btn_dimUp" />
 
             <Button
                 android:id="@+id/btn_red"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="1"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/red"
                 android:text="@string/btn_red" />
 
             <Button
                 android:id="@+id/btn_lightRed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="2"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/lightRed"
                 android:text="@string/btn_lightRed" />
 
             <Button
                 android:id="@+id/btn_orange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="3"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/orange"
                 android:text="@string/btn_orange" />
 
             <Button
                 android:id="@+id/btn_lightOrange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="4"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/lightOrange"
                 android:text="@string/btn_lightOrange" />
 
             <Button
                 android:id="@+id/btn_yellow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="0"
+                android:layout_margin="8dp"
                 android:layout_row="5"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/yellow"
                 android:text="@string/btn_yellow" />
 
             <Button
                 android:id="@+id/btn_dimDown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="0"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/white"
                 android:text="@string/btn_dimDown" />
 
             <Button
                 android:id="@+id/btn_green"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="1"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/green"
                 android:text="@string/btn_green" />
 
             <Button
                 android:id="@+id/btn_lightGreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="2"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/lightGreen"
                 android:text="@string/btn_lightGreen" />
 
             <Button
                 android:id="@+id/btn_cyan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="3"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/cyan"
                 android:text="@string/btn_cyan" />
 
             <Button
                 android:id="@+id/btn_lightTurquoise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="4"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/lightTurquoise"
                 android:text="@string/btn_lightTurquoise" />
 
             <Button
                 android:id="@+id/btn_turquoise"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="1"
+                android:layout_margin="8dp"
                 android:layout_row="5"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/turquoise"
                 android:text="@string/btn_turquoise" />
 
             <Button
                 android:id="@+id/btn_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="0"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/black"
                 android:text="@string/btn_off"
                 android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/btn_blue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="1"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/blue"
                 android:text="@string/btn_blue" />
 
             <Button
                 android:id="@+id/btn_lightBlue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="2"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/lightBlue"
                 android:text="@string/btn_lightBlue" />
 
             <Button
                 android:id="@+id/btn_violet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="3"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/violet"
                 android:text="@string/btn_violet" />
 
             <Button
                 android:id="@+id/btn_purple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="4"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/purple"
                 android:text="@string/btn_purple" />
 
             <Button
                 android:id="@+id/btn_pink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="2"
+                android:layout_margin="8dp"
                 android:layout_row="5"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/pink"
                 android:text="@string/btn_pink" />
 
             <Button
                 android:id="@+id/btn_on"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="0"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/red"
                 android:text="@string/btn_on" />
 
             <Button
                 android:id="@+id/btn_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="1"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/white"
                 android:text="@string/btn_white" />
 
             <Button
                 android:id="@+id/btn_flash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="2"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:text="@string/btn_flash" />
+                android:text="@string/btn_flash"
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_strobe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="3"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:text="@string/btn_strobe" />
+                android:text="@string/btn_strobe"
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_fade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="4"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:text="@string/btn_fade" />
+                android:text="@string/btn_fade"
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_smooth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_column="3"
+                android:layout_margin="8dp"
                 android:layout_row="5"
+                android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:text="@string/btn_smooth" />
+                android:text="@string/btn_smooth"
+                android:textSize="10sp" />
 
         </GridLayout>
 
         <SeekBar
             android:id="@+id/sldr_r"
             android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:layout_height="25dp"
+            android:progressTint="@color/red"
+            android:thumbTint="@color/red" />
 
         <SeekBar
             android:id="@+id/sldr_g"
             android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:layout_height="25dp"
+            android:progressTint="@color/green"
+            android:thumbTint="@color/green" />
 
         <SeekBar
             android:id="@+id/sldr_b"
             android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:layout_height="25dp"
+            android:progressTint="@color/blue"
+            android:thumbTint="@color/blue" />
 
         <SeekBar
             android:id="@+id/sldr_a"
             android:layout_width="match_parent"
-            android:layout_height="35dp" />
+            android:layout_height="25dp"
+            android:progressTint="@color/white"
+            android:thumbTint="@color/white" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,5 @@
 package eu.dromnes.tg18.tg18;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.net.Uri;
@@ -10,7 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity
+public class MainActivity extends AppCompatActivity
         implements LightControl.OnFragmentInteractionListener, HeightControl.OnFragmentInteractionListener, PcControl.OnFragmentInteractionListener {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -38,6 +37,7 @@ public class MainActivity extends Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.mdTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -51,6 +51,6 @@ public class MainActivity extends Activity
     }
 
     public void onFragmentInteraction(Uri uri) {
-        
+
     }
 }
