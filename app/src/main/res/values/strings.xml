@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">TG18</string>
+    <string name="btn_topPosition">Top</string>
+    <string name="btn_up">Up</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_down">Down</string>
+    <string name="btn_bottomPosition">Bottom</string>
+
+    <string name="btn_dimUp"></string>
+    <string name="btn_red">R</string>
+    <string name="btn_lightRed"></string>
+    <string name="btn_orange"></string>
+    <string name="btn_lightOrange"></string>
+    <string name="btn_yellow"></string>
+    <string name="btn_dimDown"></string>
+    <string name="btn_green">G</string>
+    <string name="btn_lightGreen"></string>
+    <string name="btn_cyan"></string>
+    <string name="btn_lightTurquoise"></string>
+    <string name="btn_turquoise"></string>
+    <string name="btn_off">OFF</string>
+    <string name="btn_blue">B</string>
+    <string name="btn_lightBlue"></string>
+    <string name="btn_violet"></string>
+    <string name="btn_purple"></string>
+    <string name="btn_pink"></string>
+    <string name="btn_on">ON</string>
+    <string name="btn_white">W</string>
+    <string name="btn_flash">FLASH</string>
+    <string name="btn_strobe">STROBE</string>
+    <string name="btn_fade">FADE</string>
+    <string name="btn_smooth">SMOOTH</string>
+
+    <string name="btn_PcOnOff">On/Off</string>
+    <string name="btn_PcRestart">Restart</string>
 </resources>

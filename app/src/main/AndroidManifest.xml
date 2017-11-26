@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".HeightControl" />
+        <activity android:name=".LightControl" />
+        <activity android:name=".PcControl"></activity>
     </application>
 
 </manifest>
