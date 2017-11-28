@@ -103,7 +103,7 @@ public class BtSettings extends PreferenceFragment
         getActivity().unregisterReceiver(btStateReceiver);
     }
 
-    private void changeBtState(boolean enable) {
+    void changeBtState(boolean enable) {
         if (enable) {
             if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -134,9 +134,9 @@ public class BtSettings extends PreferenceFragment
             case Constants.REQUEST_BT_ON:
                 String bluetoothState;
                 if(resultCode == Activity.RESULT_OK) {
-                    bluetoothState = Constants.INTERNAL + "01000011";
+                    bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_R_TURNEDON, Constants.NONE);
                 } else {
-                    bluetoothState = Constants.INTERNAL + "01000001";
+                    bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_R_NTURNEDON, Constants.NONE);
                 }
                 mListener.bluetoothStateChange(bluetoothState);
                 break;

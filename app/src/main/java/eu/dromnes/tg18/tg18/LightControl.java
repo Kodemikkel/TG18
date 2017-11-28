@@ -246,7 +246,7 @@ public class LightControl extends Fragment {
             * This is to avoid sending data multiple times.
             */
             if(view.getTag().toString().contains("btnC_")) {
-                mListener.lightButtonPressed(valueRGBA);
+                mListener.sendData(valueRGBA);
             }
         }
     }
@@ -277,7 +277,7 @@ public class LightControl extends Fragment {
             // Check if the change is from a user
             // If it is, we want to send the changes to the controller instantly
             if (fromUser) {
-                mListener.lightButtonPressed(valueRGBA);
+                mListener.sendData(valueRGBA);
             }
         }
     }
@@ -293,6 +293,6 @@ public class LightControl extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void lightButtonPressed(String dataToSend);
+        void sendData(String dataToSend);
     }
 }
