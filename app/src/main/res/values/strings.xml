@@ -7,25 +7,25 @@
     <string name="btn_bottomPosition">Bottom</string>
 
     <string name="btn_dimUp"></string>
-    <string name="btn_red">R</string>
-    <string name="btn_lightRed"></string>
-    <string name="btn_orange"></string>
-    <string name="btn_lightOrange"></string>
-    <string name="btn_yellow"></string>
+    <string name="btnC_red">R</string>
+    <string name="btnC_lightRed"></string>
+    <string name="btnC_orange"></string>
+    <string name="btnC_lightOrange"></string>
+    <string name="btnC_yellow"></string>
     <string name="btn_dimDown"></string>
-    <string name="btn_green">G</string>
-    <string name="btn_lightGreen"></string>
-    <string name="btn_cyan"></string>
-    <string name="btn_lightTurquoise"></string>
-    <string name="btn_turquoise"></string>
+    <string name="btnC_green">G</string>
+    <string name="btnC_lightGreen"></string>
+    <string name="btnC_cyan"></string>
+    <string name="btnC_lightTurquoise"></string>
+    <string name="btnC_turquoise"></string>
     <string name="btn_off">OFF</string>
-    <string name="btn_blue">B</string>
-    <string name="btn_lightBlue"></string>
-    <string name="btn_violet"></string>
-    <string name="btn_purple"></string>
-    <string name="btn_pink"></string>
+    <string name="btnC_blue">B</string>
+    <string name="btnC_lightBlue"></string>
+    <string name="btnC_violet"></string>
+    <string name="btnC_purple"></string>
+    <string name="btnC_pink"></string>
     <string name="btn_on">ON</string>
-    <string name="btn_white">W</string>
+    <string name="btnC_white">W</string>
     <string name="btn_flash">FLASH</string>
     <string name="btn_strobe">STROBE</string>
     <string name="btn_fade">FADE</string>
@@ -34,10 +34,13 @@
     <string name="btn_pcOnOff">On/Off</string>
     <string name="btn_pcRestart">Restart</string>
 
+    <string name="swc_autoBt">Automatically connect to controller</string>
+    <string name="swc_autoBt_summary">Automatically turn on Bluetooth and connect to the controller on app startup</string>
+    <string name="swc_enableBt">Turn on Bluetooth</string>
+    <string name="swc_enableBt_summary">Turn on Bluetooth and automatically connect to the controller</string>
+
     <string name="title_lightControl">Light control</string>
     <string name="title_heightControl">Height control</string>
     <string name="title_pcControl">PC control</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_btSettings">Bluetooth settings</string>
 </resources>
