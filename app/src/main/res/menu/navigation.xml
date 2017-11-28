@@ -15,4 +15,9 @@
         android:id="@+id/navigation_pcControl"
         android:icon="@android:drawable/btn_star"
         android:title="@string/title_pcControl" />
+
+    <item
+        android:id="@+id/navigation_btSettings"
+        android:icon="@android:drawable/btn_star"
+        android:title="@string/title_btSettings" />
 </menu>
