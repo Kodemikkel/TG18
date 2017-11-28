@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="mdTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="MdTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/mdGreen</item>
         <item name="colorPrimaryDark">@color/mdDarkGreen</item>
@@ -16,7 +16,7 @@
         <item name="android:windowBackground">@color/mdLightGreen</item>
     </style>
 
-    <style name="SplashScreenStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@color/mdBlack</item>
     </style>
 

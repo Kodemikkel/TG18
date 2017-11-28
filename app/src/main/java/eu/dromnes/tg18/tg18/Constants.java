@@ -15,17 +15,26 @@ public interface Constants {
     String TOAST = "toast";
     ///////////////////////
 
-    // Data prefixes
+    // DATA CODES //
+    // Prefixes
     String INTERNAL = ";0_";
     String SYSTEM = ";1_";
     String LIGHT_CONTROL = ";2_";
     String HEIGHT_CONTROL = ";3_";
     String PC_CONTROL = ";4_";
 
-    // Bluetooth constants
+    // COMMON CODES
+    String NONE = "00";
+
+    // System codes
+    String SYS_BLUETOOTH = "01";
+
+    // SYS_BLUETOOTH action codes
     int REQUEST_BT_OFF = 0;
     int REQUEST_BT_ON = 1;
 
-    // Data codes
-    String BLUETOOTH = "01";
+    // SYS_BLUETOOTH result codes
+    String SYS_BT_R_TURNEDON = "11";
+    String SYS_BT_R_NTURNEDON = "01";
+    ////////////////
 }

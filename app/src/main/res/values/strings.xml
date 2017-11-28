@@ -34,6 +34,8 @@
     <string name="btn_pcOnOff">On/Off</string>
     <string name="btn_pcRestart">Restart</string>
 
+    <string name="btn_settings">Settings</string>
+
     <string name="swc_autoBt">Automatically connect to controller</string>
     <string name="swc_autoBt_summary">Automatically turn on Bluetooth and connect to the controller on app startup</string>
     <string name="swc_enableBt">Turn on Bluetooth</string>
@@ -43,4 +45,7 @@
     <string name="title_heightControl">Height control</string>
     <string name="title_pcControl">PC control</string>
     <string name="title_btSettings">Bluetooth settings</string>
+    <string name="title_btNotConnected">Not connected</string>
+    <string name="title_btConnecting">Connecting&#8230;</string>
+    <string name="title_btConnected">Connected</string>
 </resources>
