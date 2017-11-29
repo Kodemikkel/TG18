@@ -1,11 +1,7 @@
 package eu.dromnes.tg18.tg18;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -26,26 +22,6 @@ public class BtSettings extends PreferenceFragment
 
     private OnFragmentInteractionListener mListener;
 
-    private final BroadcastReceiver btStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if(action != null) {
-                if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
-                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
-
-                    switch (state) {
-                        case BluetoothAdapter.STATE_OFF:
-                            enableBluetoothSwitch.setChecked(false);
-                            break;
-                        case BluetoothAdapter.STATE_ON:
-                            enableBluetoothSwitch.setChecked(true);
-                            break;
-                    }
-                }
-            }
-        }
-    };
 
     public BtSettings() {
         // Required empty public constructor
@@ -89,9 +65,6 @@ public class BtSettings extends PreferenceFragment
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-        getActivity().registerReceiver(btStateReceiver, filter);
-
         enableBluetoothSwitch.setChecked(BluetoothAdapter.getDefaultAdapter().isEnabled());
         enableBluetoothSwitch.setEnabled(!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(KEY_PREF_AUTO_BLUETOOTH, false));
     }
@@ -100,20 +73,16 @@ public class BtSettings extends PreferenceFragment
     public void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        getActivity().unregisterReceiver(btStateReceiver);
     }
 
     void changeBtState(boolean enable) {
+        String bluetoothState;
         if (enable) {
-            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, Constants.REQUEST_BT_ON);
-            }
+            bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.NONE, Constants.SYS_BT_ON);
         } else {
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                BluetoothAdapter.getDefaultAdapter().disable();
-            }
+            bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.NONE, Constants.SYS_BT_OFF);
         }
+        mListener.bluetoothStateChange(bluetoothState);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -125,20 +94,6 @@ public class BtSettings extends PreferenceFragment
                 } else {
                     enableBluetoothSwitch.setEnabled(true);
                 }
-                break;
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
-            case Constants.REQUEST_BT_ON:
-                String bluetoothState;
-                if(resultCode == Activity.RESULT_OK) {
-                    bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_R_TURNEDON, Constants.NONE);
-                } else {
-                    bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_R_NTURNEDON, Constants.NONE);
-                }
-                mListener.bluetoothStateChange(bluetoothState);
                 break;
         }
     }

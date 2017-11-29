@@ -33,8 +33,8 @@ public interface Constants {
     int REQUEST_BT_OFF = 0;
     int REQUEST_BT_ON = 1;
 
-    // SYS_BLUETOOTH result codes
-    String SYS_BT_R_TURNEDON = "11";
-    String SYS_BT_R_NTURNEDON = "01";
+    // SYS_BLUETOOTH action/result codes
+    String SYS_BT_ON = "11";
+    String SYS_BT_OFF = "01";
     ////////////////
 }

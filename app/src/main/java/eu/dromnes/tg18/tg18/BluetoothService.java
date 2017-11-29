@@ -103,6 +103,15 @@ class BluetoothService {
         ref.write(data);
     }
 
+    void disconnect() {
+        if(currentState == STATE_CONNECTED) {
+            connectedThread.cancel();
+        } else if(currentState == STATE_CONNECTING) {
+            connectThread.cancel();
+        }
+        currentState = STATE_NONE;
+    }
+
     private void connectionFailed() {
         // Send a message to the handler to tell that the connection failed.
         Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST);
