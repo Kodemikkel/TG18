@@ -21,38 +21,72 @@ class AppHandler extends Handler {
         if(activity != null) {
             Toolbar toolbar = activity.findViewById(R.id.toolBar);
             switch(msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    // TODO: ADD CODE FOR DEALING WITH CHANGES IN CONNECTION STATE
+                // Indicates that the message is a status message, and should probably be displayed
+                case Constants.MESSAGE_STATUS:
                     switch(msg.arg1) {
-                        case BluetoothService.STATE_NONE:
-                            Log.d("DEBUG", "STATE_NONE");
-                            if(toolbar != null) {
-                                toolbar.setSubtitle(R.string.title_btNotConnected);
-                            }
-                            break;
-                        case BluetoothService.STATE_CONNECTING:
-                            Log.d("DEBUG", "STATE_CONNECTING");
-                            if(toolbar != null) {
-                                toolbar.setSubtitle(R.string.title_btConnecting);
-                            }
-                            break;
-                        case BluetoothService.STATE_CONNECTED:
-                            Log.d("DEBUG", "STATE_CONNECTED");
-                            if(toolbar != null) {
-                                toolbar.setSubtitle(R.string.title_btConnected);
+                        // Indicates that the status message is for Bluetooth
+                        case Constants.BLUETOOTH:
+                            switch(msg.arg2) {
+                                case Constants.BT_OFF:
+                                    Log.d("HANDLER_BT_OFF", "Bluetooth off");
+                                    break;
+                                case Constants.BT_ON:
+                                    Log.d("HANDLER_BT_ON", "Bluetooth on");
+                                    break;
+                                case Constants.BT_DEVICE_NAME:
+                                    Log.d("HANDLER_BT_DEVICE_NAME", "Device name");
+                                    break;
+                                case BluetoothService.STATE_NONE:
+                                    Log.d("HANDLER_STATE_NONE", "Not connected");
+                                    if(toolbar != null) {
+                                        toolbar.setSubtitle(R.string.title_btNotConnected);
+                                    }
+                                    break;
+                                case BluetoothService.STATE_CONNECTING:
+                                    Log.d("HANDLER_STATE_CONNECTING", "Connecting...");
+                                    if(toolbar != null) {
+                                        toolbar.setSubtitle(R.string.title_btConnecting);
+                                    }
+                                    break;
+                                case BluetoothService.STATE_CONNECTED:
+                                    Log.d("HANDLER_STATE_CONNECTED", "Connected");
+                                    if(toolbar != null) {
+                                        toolbar.setSubtitle(R.string.title_btConnected);
+                                    }
+                                    break;
                             }
                             break;
                     }
                     break;
-                case Constants.MESSAGE_READ:
-                    // TODO: ADD CODE FOR DEALING WITH DATA RETURNED FROM THE CONTROLLER
-                    byte[] readBuffer = (byte[]) msg.obj;
-                    String readMessage = new String(readBuffer, 0, msg.arg1);
-                    Log.d("DATA_RECEIVED", readMessage);
+
+                // Indicates that the message is data related
+                case Constants.MESSAGE_DATA:
+                    switch(msg.arg1) {
+                        case Constants.DATA_SEND:
+                            byte[] writeBuffer = (byte[]) msg.obj;
+                            String writeData = new String(writeBuffer, 0, 11);
+                            Log.d("HANDLER_DATA_SEND", writeData);
+                            break;
+                        case Constants.DATA_RCV:
+                            // TODO: ADD CODE FOR DEALING WITH MESSAGE_DATA RETURNED FROM THE CONTROLLER
+                            byte[] readBuffer = (byte[]) msg.obj;
+                            String readData = new String(readBuffer, 0, msg.arg2);
+                            Log.d("HANDLER_DATA_RECEIVED", readData);
+                            break;
+                    }
                     break;
+
+                // Indicates that a toast should be made
                 case Constants.MESSAGE_TOAST:
-                    if (activity != null) {
-                        Toast.makeText(activity, msg.getData().getString(Constants.TOAST), Toast.LENGTH_SHORT).show();
+                    switch(msg.arg1) {
+                        case Constants.TOAST_SHORT:
+                            Toast.makeText(activity, msg.getData().getString(Constants.TOAST), Toast.LENGTH_SHORT).show();
+                            Log.d("HANDLER_TOAST_SHORT", msg.getData().getString(Constants.TOAST));
+                            break;
+                        case Constants.TOAST_LONG:
+                            Toast.makeText(activity, msg.getData().getString(Constants.TOAST), Toast.LENGTH_LONG).show();
+                            Log.d("HANDLER_TOAST_LONG", msg.getData().getString(Constants.TOAST));
+                            break;
                     }
                     break;
             }

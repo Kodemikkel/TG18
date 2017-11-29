@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                             if(enableBt != null) {
                                 enableBt.setChecked(false);
                             }
+                            bluetoothStateChange(DataFormatter.formatData(
+                                    Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE,
+                                    Constants.SYS_BT_OFF, Constants.NONE));
                             break;
                         case BluetoothAdapter.STATE_ON:
                             if(enableBt != null) {
@@ -174,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
 
             // Check the result for a request to enable or disable Bluetooth
             if(dataCodes[3].equals(Constants.SYS_BT_ON)) {
+                handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_ON).sendToTarget();
                 btService.connectToController();
             } else if(dataCodes[3].equals(Constants.SYS_BT_OFF)) {
+                handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_OFF).sendToTarget();
                 Toolbar toolbar = findViewById(R.id.toolBar);
                 toolbar.setSubtitle("Bluetooth disabled - cannot connect");
             }

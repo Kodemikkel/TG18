@@ -51,7 +51,7 @@ class BluetoothService {
 
     private void changeState(int state) {
         this.currentState = state;
-        handler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, state).sendToTarget();
     }
 
     private void findController(String address) {
@@ -114,7 +114,7 @@ class BluetoothService {
 
     private void connectionFailed() {
         // Send a message to the handler to tell that the connection failed.
-        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST);
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Unable to connect to server");
         msg.setData(bundle);
@@ -126,7 +126,7 @@ class BluetoothService {
 
     private void connectionLost() {
         // Send a message to the handler to tell that the connection was lost.
-        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST);
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Connection lost");
         msg.setData(bundle);
@@ -214,7 +214,7 @@ class BluetoothService {
                 try {
                     numBytes = inStream.read(buffer);
 
-                    handler.obtainMessage(Constants.MESSAGE_READ, numBytes, -1, buffer).sendToTarget();
+                    handler.obtainMessage(Constants.MESSAGE_DATA, Constants.DATA_RCV, numBytes, buffer).sendToTarget();
                 } catch(IOException connectionException) {
                     Log.e(TAG, "Input stream was disconnected", connectionException);
                     connectionLost();
@@ -227,10 +227,9 @@ class BluetoothService {
             try {
                 outStream.write(buffer);
 
-                handler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
+                handler.obtainMessage(Constants.MESSAGE_DATA, Constants.DATA_SEND, -1, buffer).sendToTarget();
             } catch(IOException writeException) {
                 Log.e(TAG, "Error occurred while writing data", writeException);
-                handler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget();
             }
         }
 

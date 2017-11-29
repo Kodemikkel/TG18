@@ -1,21 +1,37 @@
 package eu.dromnes.tg18.tg18;
 
 public interface Constants {
-    // TODO: CREATE A SYSTEM FOR FORMATTING AND READING DATA CODES BOTH INTERNALLY AND EXTERNALLY
+    // TODO: CREATE A SYSTEM FOR FORMATTING AND READING MESSAGE_DATA CODES BOTH INTERNALLY AND EXTERNALLY
     // TODO: GET A SYSTEM FOR HANDLER CONSTANTS
 
     // HANDLER CONSTANTS //
-    // Message types
-    int MESSAGE_READ = 0;
-    int MESSAGE_WRITE = 1;
-    int MESSAGE_TOAST = 2;
-    int MESSAGE_STATE_CHANGE = 3;
+    // Indicates status messages
+    int MESSAGE_STATUS = 10;
+
+    // Indicates a status message from Bluetooth
+    int BLUETOOTH = 100;
+    // Sub-codes for Bluetooth status messages
+    int BT_OFF = 101;
+    int BT_ON = 102;
+    int BT_DEVICE_NAME = 103;
+
+    //Indicates messages about data
+    int MESSAGE_DATA = 200;
+    // Sub-codes for data messages
+    int DATA_SEND = 201;
+    int DATA_RCV = 202;
+
+    // Indicates messages for toast
+    int MESSAGE_TOAST = 300;
+    // Sub-codes for toast messages
+    int TOAST_SHORT = 301;
+    int TOAST_LONG = 302;
 
     //
     String TOAST = "toast";
     ///////////////////////
 
-    // DATA CODES //
+    // MESSAGE_DATA CODES //
     // Prefixes
     String INTERNAL = ";0_";
     String SYSTEM = ";1_";
