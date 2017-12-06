@@ -1,6 +1,7 @@
 package eu.dromnes.tg18.tg18;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     private BluetoothService btService = null;
 
     BtSettings btSettings = null;
+    StatusLog statusLog = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.popBackStack();
             btSettings = null;
+            statusLog = null;
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             switch (item.getItemId()) {
@@ -75,17 +78,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                             if(enableBt != null) {
                                 enableBt.setChecked(false);
                             }
-                            bluetoothStateChange(DataFormatter.formatData(
-                                    Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE,
-                                    Constants.SYS_BT_OFF, Constants.NONE));
+                            bluetoothStateChange(Constants.INTERNAL + Constants.BT_DISABLED);
                             break;
                         case BluetoothAdapter.STATE_ON:
                             if(enableBt != null) {
                                 enableBt.setChecked(true);
                             }
-                            bluetoothStateChange(DataFormatter.formatData(
-                                    Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE,
-                                    Constants.SYS_BT_ON, Constants.NONE));
+                            bluetoothStateChange(Constants.INTERNAL + Constants.BT_ENABLED);
                             break;
                     }
                 }
@@ -105,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, new LightControl()).commit();
@@ -113,12 +111,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         btService = new BluetoothService(handler);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if(sharedPrefs.getBoolean(BtSettings.KEY_PREF_AUTO_BLUETOOTH, false)) {
-            if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, Constants.REQUEST_BT_ON);
-            } else {
-                bluetoothStateChange(DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_ON, Constants.NONE));
-            }
+            bluetoothStateChange(Constants.INTERNAL + Constants.BT_TURN_ON);
         }
     }
 
@@ -130,14 +123,19 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO: FIX BUG THAT CAUSES STATUSLOG TO BE ADDED MULTIPLE TIMES TO THE BACKSTACK
         switch(item.getItemId()) {
             case R.id.action_settings:
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                btSettings = new BtSettings();
+                if(btSettings == null) {
+                    btSettings = new BtSettings();
+                    statusLog = new StatusLog();
+                }
                 transaction.replace(R.id.content, btSettings);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.addToBackStack(null);
+                transaction.add(R.id.content, statusLog);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 transaction.commit();
                 return true;
             default:
@@ -171,31 +169,31 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     // This way we ensure that the correct actions are taken and that the application is
     // "aware" that the Bluetooth state has been modified
     public void bluetoothStateChange(String data) {
-        String[] dataCodes = DataFormatter.readData(data);
-        if(dataCodes[0].equals(Constants.INTERNAL)) {
-            // TODO: ADD CODE FOR DEALING WITH BLUETOOTH ON/OFF FEEDBACK
-
-            // Check the result for a request to enable or disable Bluetooth
-            if(dataCodes[3].equals(Constants.SYS_BT_ON)) {
-                handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_ON).sendToTarget();
-                btService.connectToController();
-            } else if(dataCodes[3].equals(Constants.SYS_BT_OFF)) {
-                handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_OFF).sendToTarget();
-                Toolbar toolbar = findViewById(R.id.toolBar);
-                toolbar.setSubtitle("Bluetooth disabled - cannot connect");
-            }
-            // Check if there is a request to enable or disable Bluetooth
-            if(dataCodes[4].equals(Constants.SYS_BT_ON)) {
-                if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, Constants.REQUEST_BT_ON);
+        String[] temp = data.split("_");
+        String sysPrefix = temp[0] + "_";
+        String dataCode = temp[1];
+        if(sysPrefix.equals(Constants.INTERNAL)) {
+                if(dataCode.equals(Constants.BT_ENABLED)) {
+                    handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_ON).sendToTarget();
+                    btService.connectToController();
                 }
-            } else if (dataCodes[4].equals(Constants.SYS_BT_OFF)) {
-                if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    btService.disconnect();
-                    BluetoothAdapter.getDefaultAdapter().disable();
+                if(dataCode.equals(Constants.BT_DISABLED)) {
+                    handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_OFF).sendToTarget();
                 }
-            }
+                if(dataCode.equals(Constants.BT_TURN_ON)) {
+                    if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                        handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_TURNED_ON).sendToTarget();
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, Constants.REQUEST_BT_ON);
+                    }
+                }
+                if(dataCode.equals(Constants.BT_TURN_OFF)) {
+                    if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                        handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_TURNED_OFF).sendToTarget();
+                        btService.disconnect();
+                        BluetoothAdapter.getDefaultAdapter().disable();
+                    }
+                }
         }
     }
 
@@ -225,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         switch(requestCode) {
             case Constants.REQUEST_BT_ON:
                 if(resultCode == Activity.RESULT_OK) {
-                    bluetoothStateChange(DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_ON, Constants.NONE));
+                    bluetoothStateChange(Constants.INTERNAL + Constants.BT_ENABLED);
                 } else {
-                    bluetoothStateChange(DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.SYS_BT_OFF, Constants.NONE));
+                    bluetoothStateChange(Constants.INTERNAL + Constants.BT_DISABLED);
                 }
                 break;
         }

@@ -8,6 +8,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
 // TODO: IF POSSIBLE; GET A CLEANER WAY OF DEALING WITH PREFERENCES
 
@@ -78,9 +81,9 @@ public class BtSettings extends PreferenceFragment
     void changeBtState(boolean enable) {
         String bluetoothState;
         if (enable) {
-            bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.NONE, Constants.SYS_BT_ON);
+            bluetoothState = Constants.INTERNAL + Constants.BT_TURN_ON;
         } else {
-            bluetoothState = DataFormatter.formatData(Constants.INTERNAL, Constants.SYS_BLUETOOTH, Constants.NONE, Constants.NONE, Constants.SYS_BT_OFF);
+            bluetoothState = Constants.INTERNAL + Constants.BT_TURN_OFF;
         }
         mListener.bluetoothStateChange(bluetoothState);
     }

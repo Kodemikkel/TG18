@@ -8,19 +8,6 @@ import java.util.Map;
 abstract class DataFormatter {
     private static final String TAG = "DataFormatter";
 
-    // Formats a data code correctly with the supplied codes
-    static String formatData(String prefix, String system, String toSystem, String result, String action) {
-        String formattedDataCode;
-        String dataCode = system + toSystem + result + action;
-        if(dataCode.matches("-?[0-9a-fA-F]+")) {
-            formattedDataCode = prefix + dataCode;
-            return formattedDataCode;
-        } else {
-            Log.e(TAG, "Invalid parameter(s) (must be a hex string)");
-            return "NOT_VALID";
-        }
-    }
-
     // Reads a data code and returns a map containing each of the codes
     static Map<String, String> readDataAsMap(String dataToRead) {
         Map<String, String> dataCodes = new HashMap<>();

@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="eu.dromnes.tg18.tg18.StatusLog"
+    android:gravity="bottom"
+    android:paddingBottom="@dimen/_46sdp"
+    android:paddingStart="@dimen/_5sdp"
+    android:paddingEnd="@dimen/_5sdp">
+
+        <TextView
+            android:id="@+id/statusLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="16" />
+
+</LinearLayout>

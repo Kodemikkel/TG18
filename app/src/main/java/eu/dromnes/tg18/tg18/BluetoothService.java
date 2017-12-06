@@ -27,10 +27,11 @@ class BluetoothService {
     static final int STATE_CONNECTING = 1;
     static final int STATE_CONNECTED = 2;
 
-    private Handler handler;
+    private final Handler handler;
 
     private final BluetoothAdapter deviceBtAdapter;
     private BluetoothDevice controller;
+    private String controllerName;
 
     private ConnectThread connectThread;
     private ConnectedThread connectedThread;
@@ -43,18 +44,17 @@ class BluetoothService {
         if(deviceBtAdapter == null) {
             // TODO: ADD CODE FOR NON-COMPATIBLE DEVICES
             Log.e(TAG, "Not compatible with Bluetooth.");
-        } else {
-            this.handler = handler;
-            this.currentState = STATE_NONE;
         }
+        this.handler = handler;
+        this.currentState = STATE_NONE;
     }
 
-    private void changeState(int state) {
+    synchronized private void changeState(int state) {
         this.currentState = state;
         handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, state).sendToTarget();
     }
 
-    private void findController(String address) {
+    synchronized private void findController(String address) {
         // Get a list of all devices paired with this device.
         Set<BluetoothDevice> pairedDevices = deviceBtAdapter.getBondedDevices();
 
@@ -64,13 +64,25 @@ class BluetoothService {
                 String serverBDAddress = device.getAddress();
                 if(serverBDAddress.equals(address)) {
                     this.controller = device;
+                    this.controllerName = device.getName();
                     break;
                 }
             }
         }
     }
 
-    void connectToController() {
+    synchronized void connectToController() {
+        if(currentState == STATE_CONNECTING) {
+            if(connectThread != null) {
+                connectThread.cancel();
+                connectThread = null;
+            }
+        }
+        if(connectedThread != null) {
+            connectedThread.cancel();
+            connectedThread = null;
+        }
+
         findController(PI_BD_ADDRESS);
         connectThread = new ConnectThread();
         connectThread.start();
@@ -86,6 +98,20 @@ class BluetoothService {
             connectedThread.cancel();
             connectedThread = null;
         }
+
+        // Send a message to the handler to tell that we are connected.
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TOAST, "Connected");
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+
+        // Send a message to the handler containing the device name.
+        Message msg1 = handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_DEVICE_NAME);
+        Bundle bundle1 = new Bundle();
+        bundle1.putString(Constants.DEVICE_NAME, controllerName);
+        msg1.setData(bundle1);
+        handler.sendMessage(msg1);
 
         connectedThread = new ConnectedThread(socket);
         connectedThread.start();
@@ -104,17 +130,20 @@ class BluetoothService {
     }
 
     void disconnect() {
-        if(currentState == STATE_CONNECTED) {
+        if(connectedThread != null) {
             connectedThread.cancel();
-        } else if(currentState == STATE_CONNECTING) {
+            connectedThread = null;
+        }
+        if(connectThread != null) {
             connectThread.cancel();
+            connectThread = null;
         }
         currentState = STATE_NONE;
     }
 
     private void connectionFailed() {
         // Send a message to the handler to tell that the connection failed.
-        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT);
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Unable to connect to server");
         msg.setData(bundle);
@@ -126,7 +155,7 @@ class BluetoothService {
 
     private void connectionLost() {
         // Send a message to the handler to tell that the connection was lost.
-        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT);
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Connection lost");
         msg.setData(bundle);
@@ -163,6 +192,7 @@ class BluetoothService {
                     Log.e(TAG, "Unable to close socket", closeException);
                 }
                 connectionFailed();
+                return;
             }
             synchronized (BluetoothService.this) {
                 connectThread = null;
@@ -210,7 +240,7 @@ class BluetoothService {
             buffer = new byte[1024];
             int numBytes;
 
-            while(true) {
+            while(currentState == STATE_CONNECTED) {
                 try {
                     numBytes = inStream.read(buffer);
 

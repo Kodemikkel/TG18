@@ -14,6 +14,8 @@ public interface Constants {
     int BT_OFF = 101;
     int BT_ON = 102;
     int BT_DEVICE_NAME = 103;
+    int BT_TURNED_OFF = 104;
+    int BT_TURNED_ON = 105;
 
     //Indicates messages about data
     int MESSAGE_DATA = 200;
@@ -27,8 +29,12 @@ public interface Constants {
     int TOAST_SHORT = 301;
     int TOAST_LONG = 302;
 
-    //
+    // The index for a toast message
     String TOAST = "toast";
+
+    // The index for a device name message
+    String DEVICE_NAME = "device_name";
+
     ///////////////////////
 
     // MESSAGE_DATA CODES //
@@ -39,18 +45,16 @@ public interface Constants {
     String HEIGHT_CONTROL = ";3_";
     String PC_CONTROL = ";4_";
 
-    // COMMON CODES
-    String NONE = "00";
-
-    // System codes
-    String SYS_BLUETOOTH = "01";
 
     // SYS_BLUETOOTH action codes
-    int REQUEST_BT_OFF = 0;
     int REQUEST_BT_ON = 1;
 
-    // SYS_BLUETOOTH action/result codes
-    String SYS_BT_ON = "11";
-    String SYS_BT_OFF = "01";
-    ////////////////
+
+    // DATA CODES USED TO TRANSMIT DATA //
+    // Combine with prefixes to form a complete data code
+    String BT_ENABLED = "01001100";
+    String BT_DISABLED = "01000100";
+    String BT_TURN_ON = "01000011";
+    String BT_TURN_OFF = "01000001";
+    //////////////////////////////////////
 }
