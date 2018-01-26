@@ -1,7 +1,6 @@
 package eu.dromnes.tg18.tg18;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
@@ -17,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     private final static String TAG = "MainActivity";
 
     final AppHandler handler = new AppHandler(this);
-    private BluetoothService btService = null;
+    private BtService btService = null;
 
     BtSettings btSettings = null;
     StatusLog statusLog = null;
@@ -78,13 +78,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                             if(enableBt != null) {
                                 enableBt.setChecked(false);
                             }
-                            bluetoothStateChange(Constants.INTERNAL + Constants.BT_DISABLED);
+                            bluetoothStateHandler(Constants.INTERNAL + Constants.BT_DISABLED);
                             break;
                         case BluetoothAdapter.STATE_ON:
                             if(enableBt != null) {
                                 enableBt.setChecked(true);
                             }
-                            bluetoothStateChange(Constants.INTERNAL + Constants.BT_ENABLED);
+                            bluetoothStateHandler(Constants.INTERNAL + Constants.BT_ENABLED);
                             break;
                     }
                 }
@@ -108,10 +108,11 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, new LightControl()).commit();
 
-        btService = new BluetoothService(handler);
+        btService = new BtService(handler);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("PREFS", sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
         if(sharedPrefs.getBoolean(BtSettings.KEY_PREF_AUTO_BLUETOOTH, false)) {
-            bluetoothStateChange(Constants.INTERNAL + Constants.BT_TURN_ON);
+            bluetoothStateHandler(Constants.INTERNAL + Constants.BT_TURN_ON);
         }
     }
 
@@ -123,20 +124,30 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: FIX BUG THAT CAUSES STATUSLOG TO BE ADDED MULTIPLE TIMES TO THE BACKSTACK
         switch(item.getItemId()) {
             case R.id.action_settings:
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
+                BtSettings btSettingsFrag = (BtSettings) fragmentManager.findFragmentByTag("btSettings");
                 if(btSettings == null) {
                     btSettings = new BtSettings();
                     statusLog = new StatusLog();
                 }
-                transaction.replace(R.id.content, btSettings);
-                transaction.addToBackStack(null);
-                transaction.add(R.id.content, statusLog);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
+                if(btSettingsFrag == null) {
+                    transaction.replace(R.id.content, btSettings, "btSettings");
+                    transaction.add(R.id.content, statusLog, "statusLog");
+                    transaction.addToBackStack(null);
+                    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    transaction.commit();
+                } else {
+                    if(!btSettingsFrag.isVisible()) {
+                        transaction.replace(R.id.content, btSettings, "btSettings");
+                        transaction.add(R.id.content, statusLog, "statusLog");
+                        transaction.addToBackStack(null);
+                        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        transaction.commit();
+                    }
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -163,19 +174,24 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
             btService.disconnect();
             btService = null;
         }
+        if(btSettings != null) {
+            btSettings = null;
+            statusLog = null;
+        }
     }
 
     // Every change to the state of the Bluetooth adapter should happen through this method
     // This way we ensure that the correct actions are taken and that the application is
     // "aware" that the Bluetooth state has been modified
-    public void bluetoothStateChange(String data) {
+    public void bluetoothStateHandler(String data) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         String[] temp = data.split("_");
         String sysPrefix = temp[0] + "_";
         String dataCode = temp[1];
         if(sysPrefix.equals(Constants.INTERNAL)) {
                 if(dataCode.equals(Constants.BT_ENABLED)) {
                     handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_ON).sendToTarget();
-                    btService.connectToController();
+                    btService.connectToController(sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
                 }
                 if(dataCode.equals(Constants.BT_DISABLED)) {
                     handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_OFF).sendToTarget();
@@ -185,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                         handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, Constants.BT_TURNED_ON).sendToTarget();
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(enableBtIntent, Constants.REQUEST_BT_ON);
+                    } else {
+                        bluetoothStateHandler(Constants.INTERNAL + Constants.BT_ENABLED);
                     }
                 }
                 if(dataCode.equals(Constants.BT_TURN_OFF)) {
@@ -195,6 +213,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                     }
                 }
         }
+    }
+
+    public void changeRPi(String address) {
+        btService.disconnect();
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("PREFS", sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
+        btService.connectToController(sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
     }
 
     public void sendData(String dataToSend) {
@@ -208,14 +233,18 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                 break;
             case Constants.LIGHT_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as light control
-                byte[] send = dataToSend.getBytes(StandardCharsets.UTF_8);
-                btService.write(send);
+                byte[] ltSend = dataToSend.getBytes(StandardCharsets.UTF_8);
+                btService.write(ltSend);
                 break;
             case Constants.HEIGHT_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as height control
+                byte[] htSend = dataToSend.getBytes(StandardCharsets.UTF_8);
+                btService.write(htSend);
                 break;
             case Constants.PC_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as pc control
+                byte[] pcSend = dataToSend.getBytes(StandardCharsets.UTF_8);
+                btService.write(pcSend);
                 break;
         }
     }
@@ -223,9 +252,9 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         switch(requestCode) {
             case Constants.REQUEST_BT_ON:
                 if(resultCode == Activity.RESULT_OK) {
-                    bluetoothStateChange(Constants.INTERNAL + Constants.BT_ENABLED);
+                    bluetoothStateHandler(Constants.INTERNAL + Constants.BT_ENABLED);
                 } else {
-                    bluetoothStateChange(Constants.INTERNAL + Constants.BT_DISABLED);
+                    bluetoothStateHandler(Constants.INTERNAL + Constants.BT_DISABLED);
                 }
                 break;
         }

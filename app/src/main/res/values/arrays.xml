@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="raspberry_pi_names">
+        <item>Raspberry Pi A</item>
+        <item>Raspberry Pi B</item>
+        <item>Raspberry Pi C</item>
+        <item>Raspberry Pi D</item>
+        <item>Raspberry Pi E</item>
+        <item>Raspberry Pi F</item>
+    </string-array>
+    <string-array name="raspberry_pi_addresses">
+        <item>1</item>
+        <item>2</item>
+        <item>B8:27:EB:41:BD:A0</item>
+        <item>B8:27:EB:14:BF:22</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+</resources>

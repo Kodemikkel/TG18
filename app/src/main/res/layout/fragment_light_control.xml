@@ -24,7 +24,7 @@
             android:layout_gravity="center_horizontal">
 
             <Button
-                android:id="@+id/btn_dimUp"
+                android:id="@+id/btnC_dimUp"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="0"
@@ -32,7 +32,7 @@
                 android:layout_row="0"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/white"
-                android:tag="btn_dimUp"
+                android:tag="btnC_dimUp"
                 android:text="@string/btn_dimUp" />
 
             <Button
@@ -96,7 +96,7 @@
                 android:text="@string/btnC_yellow" />
 
             <Button
-                android:id="@+id/btn_dimDown"
+                android:id="@+id/btnF_dimDown"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="1"
@@ -104,7 +104,7 @@
                 android:layout_row="0"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/white"
-                android:tag="btn_dimDown"
+                android:tag="btnC_dimDown"
                 android:text="@string/btn_dimDown" />
 
             <Button
@@ -168,7 +168,7 @@
                 android:text="@string/btnC_turquoise" />
 
             <Button
-                android:id="@+id/btn_off"
+                android:id="@+id/btnF_off"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="2"
@@ -176,7 +176,7 @@
                 android:layout_row="0"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/black"
-                android:tag="btn_off"
+                android:tag="btnF_off"
                 android:text="@string/btn_off"
                 android:textColor="@color/white" />
 
@@ -241,7 +241,7 @@
                 android:text="@string/btnC_pink" />
 
             <Button
-                android:id="@+id/btn_on"
+                android:id="@+id/btnF_on"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="3"
@@ -249,7 +249,7 @@
                 android:layout_row="0"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/red"
-                android:tag="btn_on"
+                android:tag="btnF_on"
                 android:text="@string/btn_on" />
 
             <Button
@@ -265,7 +265,7 @@
                 android:text="@string/btnC_white" />
 
             <Button
-                android:id="@+id/btn_flash"
+                android:id="@+id/btnF_flash"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="3"
@@ -273,12 +273,12 @@
                 android:layout_row="2"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:tag="btn_flash"
+                android:tag="btnF_flash"
                 android:text="@string/btn_flash"
                 android:textSize="10sp" />
 
             <Button
-                android:id="@+id/btn_strobe"
+                android:id="@+id/btnF_strobe"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="3"
@@ -286,12 +286,12 @@
                 android:layout_row="3"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:tag="btn_strobe"
+                android:tag="btnF_strobe"
                 android:text="@string/btn_strobe"
                 android:textSize="10sp" />
 
             <Button
-                android:id="@+id/btn_fade"
+                android:id="@+id/btnF_fade"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="3"
@@ -299,12 +299,12 @@
                 android:layout_row="4"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:tag="btn_fade"
+                android:tag="btnF_fade"
                 android:text="@string/btn_fade"
                 android:textSize="10sp" />
 
             <Button
-                android:id="@+id/btn_smooth"
+                android:id="@+id/btnF_smooth"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_column="3"
@@ -312,7 +312,7 @@
                 android:layout_row="5"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/grey"
-                android:tag="btn_smooth"
+                android:tag="btnF_smooth"
                 android:text="@string/btn_smooth"
                 android:textSize="10sp" />
 

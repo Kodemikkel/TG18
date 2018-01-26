@@ -4,13 +4,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
-import android.view.Gravity;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
+import android.util.Log;
+
+import java.util.List;
 
 // TODO: IF POSSIBLE; GET A CLEANER WAY OF DEALING WITH PREFERENCES
 
@@ -20,8 +20,10 @@ public class BtSettings extends PreferenceFragment
 
     public static final String KEY_PREF_AUTO_BLUETOOTH = "pref_autoBluetooth";
     public static final String KEY_PREF_ENABLE_BLUETOOTH = "pref_enableBluetooth";
+    public static final String KEY_PREF_SELECT_PI = "pref_selectPi";
 
     private SwitchPreference enableBluetoothSwitch;
+    private ListPreference listPref;
 
     private OnFragmentInteractionListener mListener;
 
@@ -35,6 +37,7 @@ public class BtSettings extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        listPref = (ListPreference)findPreference(KEY_PREF_SELECT_PI);
         enableBluetoothSwitch = (SwitchPreference) findPreference(KEY_PREF_ENABLE_BLUETOOTH);
         enableBluetoothSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -69,7 +72,7 @@ public class BtSettings extends PreferenceFragment
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         enableBluetoothSwitch.setChecked(BluetoothAdapter.getDefaultAdapter().isEnabled());
-        enableBluetoothSwitch.setEnabled(!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean(KEY_PREF_AUTO_BLUETOOTH, false));
+        listPref.setTitle(listPref.getEntry());
     }
 
     @Override
@@ -85,7 +88,7 @@ public class BtSettings extends PreferenceFragment
         } else {
             bluetoothState = Constants.INTERNAL + Constants.BT_TURN_OFF;
         }
-        mListener.bluetoothStateChange(bluetoothState);
+        mListener.bluetoothStateHandler(bluetoothState);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -93,10 +96,12 @@ public class BtSettings extends PreferenceFragment
             case KEY_PREF_AUTO_BLUETOOTH:
                 if(sharedPreferences.getBoolean(key, false)) {
                     changeBtState(true);
-                    enableBluetoothSwitch.setEnabled(false);
-                } else {
-                    enableBluetoothSwitch.setEnabled(true);
                 }
+                break;
+            case KEY_PREF_SELECT_PI:
+                listPref.setTitle(listPref.getEntry());
+                mListener.changeRPi(listPref.getValue());
+                Log.d("RPIADDRESS", listPref.getValue());
                 break;
         }
     }
@@ -112,6 +117,7 @@ public class BtSettings extends PreferenceFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void bluetoothStateChange(String data);
+        void bluetoothStateHandler(String data);
+        void changeRPi(String address);
     }
 }

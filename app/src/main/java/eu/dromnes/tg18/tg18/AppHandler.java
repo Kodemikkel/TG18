@@ -1,29 +1,19 @@
 package eu.dromnes.tg18.tg18;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
 class AppHandler extends Handler {
     private final WeakReference<MainActivity> activity;
@@ -44,7 +34,7 @@ class AppHandler extends Handler {
                 // Indicates that the message is a status message, and should probably be displayed
                 case Constants.MESSAGE_STATUS:
                     FileOutputStream outputStream = null;
-                    String textToLog = "Status message";
+                    String textToLog = "";
                     try {
                         FileInputStream inputStream = activity.openFileInput(FILENAME);
                         InputStreamReader reader = new InputStreamReader(inputStream);
@@ -90,17 +80,29 @@ class AppHandler extends Handler {
                                     Log.d("HANDLER_BT_DEVICE_NAME", "Device name");
                                     textToLog = "Device name: " + deviceName;
                                     break;
-                                case BluetoothService.STATE_NONE:
-                                    Log.d("HANDLER_STATE_NONE", "Not connected");
-                                    textToLog = "Not connected";
+                                case BtService.STATE_SEARCHING:
+                                    Log.d("HANDLER_STATE_SEARCHING", "Searching...");
+                                    textToLog = "Searching...";
                                     break;
-                                case BluetoothService.STATE_CONNECTING:
+                                case BtService.STATE_CONNECTING:
                                     Log.d("HANDLER_STATE_CONNECTING", "Connecting...");
                                     textToLog = "Connecting...";
                                     break;
-                                case BluetoothService.STATE_CONNECTED:
+                                case BtService.STATE_CONNECTED:
                                     Log.d("HANDLER_STATE_CONNECTED", "Connected");
                                     textToLog = "Connected";
+                                    break;
+                                case BtService.CONNECTION_FAILED:
+                                    Log.d("HANDLER_CONNECTION_FAILED", "Connection failed");
+                                    textToLog = "Connection failed";
+                                    break;
+                                case BtService.CONNECTION_LOST:
+                                    Log.d("HANDLER_CONNECTION_LOST", "Connection lost");
+                                    textToLog = "Connection lost";
+                                    break;
+                                case BtService.DISCONNECTED:
+                                    Log.d("HANDLER_DISCONNECTED", "Disconnected");
+                                    textToLog = "Disconnected";
                                     break;
                             }
                             break;

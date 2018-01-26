@@ -50,11 +50,40 @@ public interface Constants {
     int REQUEST_BT_ON = 1;
 
 
-    // DATA CODES USED TO TRANSMIT DATA //
     // Combine with prefixes to form a complete data code
     String BT_ENABLED = "01001100";
     String BT_DISABLED = "01000100";
     String BT_TURN_ON = "01000011";
     String BT_TURN_OFF = "01000001";
+
+
+    // DATA CODES USED TO TRANSMIT DATA //
+        // LIGHT CONTROL FUNCTION CODES //
+        // Combine with prefix and a alphaVal value to form a complete data code
+    String LT_DIMUP = "";
+    String LT_DIMDN = "";
+    String LT_OFF = "";
+    String LT_ON = "";
+    String LT_FLASH = "G00000";
+    String LT_STROBE = "H00000";
+    String LT_FADE = "I00000";
+    String LT_SMOOTH = "J00000";
+
+
+        // HEIGHT CONTROL CODES //
+        // Combine with prefix to form a complete data code
+    String HT_TOP = "G0000000";
+    String HT_UP = "H0000000";
+    String HT_STOP = "I0000000";
+    String HT_DOWN = "J0000000";
+    String HT_BOTTOM = "K0000000";
+
+
+        // PC CONTROL CODES //
+        // Combine with prefix to form a complete data code
+    String PC_ONOFF = "G0000000";
+    String PC_ONOFF_RELEASE = "H0000000";
+    String PC_RESTART = "I0000000";
+    String PC_RESTART_RELEASE = "J0000000";
     //////////////////////////////////////
 }

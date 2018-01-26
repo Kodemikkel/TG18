@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 // TODO: MAKE THIS FRAGMENT DO THE THINGS WE WANT
 
@@ -27,7 +30,16 @@ public class PcControl extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pc_control, container, false);
+        View view = inflater.inflate(R.layout.fragment_pc_control, container, false);
+
+        ButtonTouchListener buttonTouchListener = new ButtonTouchListener();
+
+        Button btn_onOff = view.findViewById(R.id.btn_pcOnOff);
+        btn_onOff.setOnTouchListener(buttonTouchListener);
+        Button btn_restart = view.findViewById(R.id.btn_pcRestart);
+        btn_restart.setOnTouchListener(buttonTouchListener);
+
+        return view;
     }
 
     @Override
@@ -45,6 +57,39 @@ public class PcControl extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    // Listener for buttons.
+    private class ButtonTouchListener implements Button.OnTouchListener {
+        String dataToSend;
+
+        public boolean onTouch(View view, MotionEvent event) {
+            switch(view.getId()) {
+                case R.id.btn_pcOnOff:
+                    if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                        dataToSend = Constants.PC_CONTROL + Constants.PC_ONOFF;
+                        mListener.sendData(dataToSend);
+                    }
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        view.performClick();
+                        dataToSend = Constants.PC_CONTROL + Constants.PC_ONOFF_RELEASE;
+                        mListener.sendData(dataToSend);
+                    }
+                    break;
+                case R.id.btn_pcRestart:
+                    if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                        dataToSend = Constants.PC_CONTROL + Constants.PC_RESTART;
+                        mListener.sendData(dataToSend);
+                    }
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        view.performClick();
+                        dataToSend = Constants.PC_CONTROL + Constants.PC_RESTART_RELEASE;
+                        mListener.sendData(dataToSend);
+                    }
+                    break;
+            }
+            return true;
+        }
     }
 
     /**

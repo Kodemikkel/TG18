@@ -9,4 +9,10 @@
         android:key="pref_enableBluetooth"
         android:summary="@string/swc_enableBt_summary"
         android:title="@string/swc_enableBt" />
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/raspberry_pi_names"
+        android:entryValues="@array/raspberry_pi_addresses"
+        android:key="pref_selectPi"
+        android:title="Choose Raspberry Pi" />
 </PreferenceScreen>

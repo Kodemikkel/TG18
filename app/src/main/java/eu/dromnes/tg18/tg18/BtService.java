@@ -3,9 +3,11 @@ package eu.dromnes.tg18.tg18;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -16,16 +18,21 @@ import java.util.UUID;
 
 // TODO: CHANGE THE MESSAGES SENT TO THE HANDLER SO THAT WE CAN UPDATE THE UI INSTEAD OF JUST SHOWING TOASTS
 
-class BluetoothService {
-    private static final String TAG = "BluetoothService";
+class BtService {
+    private static final String TAG = "BtService";
 
-    private static final String PI_BD_ADDRESS = "B8:27:EB:41:BD:A0";
+    //private static final String PI_BD_ADDRESS = "B8:27:EB:41:BD:A0";
+    private static final String PI_BD_ADDRESS = "B8:27:EB:14:BF:22";
     //private static final UUID UNIQUE_ID = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
     private static final UUID UNIQUE_ID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     static final int STATE_NONE = 0;
-    static final int STATE_CONNECTING = 1;
-    static final int STATE_CONNECTED = 2;
+    static final int STATE_SEARCHING = 1;
+    static final int STATE_CONNECTING = 2;
+    static final int STATE_CONNECTED = 3;
+    static final int CONNECTION_FAILED = 4;
+    static final int CONNECTION_LOST = 5;
+    static final int DISCONNECTED = 6;
 
     private final Handler handler;
 
@@ -37,8 +44,9 @@ class BluetoothService {
     private ConnectedThread connectedThread;
 
     private int currentState;
+    private boolean userDisconnect;
 
-    BluetoothService(Handler handler) {
+    BtService(Handler handler) {
         this.deviceBtAdapter = BluetoothAdapter.getDefaultAdapter();
         // Check for Bluetooth compatibility.
         if(deviceBtAdapter == null) {
@@ -55,6 +63,10 @@ class BluetoothService {
     }
 
     synchronized private void findController(String address) {
+        if(controller != null) {
+            controller = null;
+            controllerName = null;
+        }
         // Get a list of all devices paired with this device.
         Set<BluetoothDevice> pairedDevices = deviceBtAdapter.getBondedDevices();
 
@@ -71,7 +83,7 @@ class BluetoothService {
         }
     }
 
-    synchronized void connectToController() {
+    synchronized void connectToController(String address) {
         if(currentState == STATE_CONNECTING) {
             if(connectThread != null) {
                 connectThread.cancel();
@@ -83,9 +95,25 @@ class BluetoothService {
             connectedThread = null;
         }
 
-        findController(PI_BD_ADDRESS);
-        connectThread = new ConnectThread();
-        connectThread.start();
+        Log.d("CONNECT", "Connecting to " + address);
+
+        // Send a message to the handler to tell that we are trying to connect.
+        Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.TOAST, "Connecting...");
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+
+        changeState(STATE_SEARCHING);
+        userDisconnect = false;
+
+        findController(address);
+        if(controller != null) {
+            connectThread = new ConnectThread();
+            connectThread.start();
+        } else {
+            connectionFailed();
+        }
     }
 
     private synchronized void connected(BluetoothSocket socket) {
@@ -130,19 +158,25 @@ class BluetoothService {
     }
 
     void disconnect() {
-        if(connectedThread != null) {
-            connectedThread.cancel();
-            connectedThread = null;
-        }
-        if(connectThread != null) {
-            connectThread.cancel();
-            connectThread = null;
-        }
+        userDisconnect = true;
         currentState = STATE_NONE;
+        if(connectedThread != null || connectThread != null) {
+            if (connectedThread != null) {
+                connectedThread.cancel();
+                connectedThread = null;
+            }
+            if (connectThread != null) {
+                connectThread.cancel();
+                connectThread = null;
+            }
+            handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, DISCONNECTED).sendToTarget();
+        }
     }
 
     private void connectionFailed() {
         // Send a message to the handler to tell that the connection failed.
+        handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, CONNECTION_FAILED).sendToTarget();
+
         Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Unable to connect to server");
@@ -150,11 +184,13 @@ class BluetoothService {
         handler.sendMessage(msg);
 
         // Set the current state to none, as we are neither connecting nor connected.
-        changeState(STATE_NONE);
+        currentState = STATE_NONE;
     }
 
     private void connectionLost() {
         // Send a message to the handler to tell that the connection was lost.
+        handler.obtainMessage(Constants.MESSAGE_STATUS, Constants.BLUETOOTH, CONNECTION_LOST).sendToTarget();
+
         Message msg = handler.obtainMessage(Constants.MESSAGE_TOAST, Constants.TOAST_SHORT, -1);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.TOAST, "Connection lost");
@@ -162,13 +198,14 @@ class BluetoothService {
         handler.sendMessage(msg);
 
         // Set the current state to none, as we are neither connecting nor connected.
-        changeState(STATE_NONE);
+        currentState = STATE_NONE;
     }
 
     private class ConnectThread extends Thread {
         private final BluetoothSocket socket;
 
         ConnectThread() {
+            changeState(STATE_CONNECTING);
             BluetoothSocket tmp = null;
 
             try {
@@ -177,7 +214,6 @@ class BluetoothService {
                 Log.e(TAG, "Failed to create socket", socketException);
             }
             socket = tmp;
-            changeState(STATE_CONNECTING);
         }
 
         public void run() {
@@ -194,7 +230,7 @@ class BluetoothService {
                 connectionFailed();
                 return;
             }
-            synchronized (BluetoothService.this) {
+            synchronized (BtService.this) {
                 connectThread = null;
             }
             connected(socket);
@@ -247,7 +283,10 @@ class BluetoothService {
                     handler.obtainMessage(Constants.MESSAGE_DATA, Constants.DATA_RCV, numBytes, buffer).sendToTarget();
                 } catch(IOException connectionException) {
                     Log.e(TAG, "Input stream was disconnected", connectionException);
-                    connectionLost();
+                    if(!userDisconnect) {
+                        Log.d("DISCONNECT", "The user did NOT disconnect (input)");
+                        connectionLost();
+                    }
                     break;
                 }
             }
@@ -260,6 +299,10 @@ class BluetoothService {
                 handler.obtainMessage(Constants.MESSAGE_DATA, Constants.DATA_SEND, -1, buffer).sendToTarget();
             } catch(IOException writeException) {
                 Log.e(TAG, "Error occurred while writing data", writeException);
+                if(!userDisconnect) {
+                    Log.d("DISCONNECT", "The user did NOT disconnect (output)");
+                    connectionLost();
+                }
             }
         }
 

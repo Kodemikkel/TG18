@@ -12,13 +12,13 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_PcOnOff"
+            android:id="@+id/btn_pcOnOff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_pcOnOff" />
 
         <Button
-            android:id="@+id/btn_PcRestart"
+            android:id="@+id/btn_pcRestart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_pcRestart" />
