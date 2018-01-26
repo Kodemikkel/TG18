@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class LightControl extends Fragment {
         seekBarA.setOnSeekBarChangeListener(seekBarListener);
 
         // Set the onClickListener for all buttons to the one created previously.
-        Button btnDimUp = view.findViewById(R.id.btnC_dimUp);
+        Button btnDimUp = view.findViewById(R.id.btnD_dimUp);
         btnDimUp.setOnClickListener(buttonListener);
         Button btnRed = view.findViewById(R.id.btnC_red);
         btnRed.setOnClickListener(buttonListener);
@@ -67,7 +68,7 @@ public class LightControl extends Fragment {
         btnLightOrange.setOnClickListener(buttonListener);
         Button btnYellow = view.findViewById(R.id.btnC_yellow);
         btnYellow.setOnClickListener(buttonListener);
-        Button btnDimDown = view.findViewById(R.id.btnF_dimDown);
+        Button btnDimDown = view.findViewById(R.id.btnD_dimDown);
         btnDimDown.setOnClickListener(buttonListener);
         Button btnGreen = view.findViewById(R.id.btnC_green);
         btnGreen.setOnClickListener(buttonListener);
@@ -128,17 +129,17 @@ public class LightControl extends Fragment {
     private class ButtonListener implements Button.OnClickListener {
         String functionCode = Constants.LIGHT_CONTROL;
         String dataToSend;
-        String color = "00000000";
+        String buttonColor = "00000000";
         int alphaStep = 32;
         int alphaInt = 0;
 
 
         // Set the values for each of the seekBars to match the color.
-        private void setSeekBarProgress(String color) {
-            int valueR = Integer.parseInt(color.substring(0, 2), 16);
-            int valueG = Integer.parseInt(color.substring(2, 4), 16);
-            int valueB = Integer.parseInt(color.substring(4, 6), 16);
-            int valueA = Integer.parseInt(color.substring(6, 8), 16);
+        private void setSeekBarProgress(String valR, String valG, String valB, String valA) {
+            int valueR = Integer.parseInt(valR, 16);
+            int valueG = Integer.parseInt(valG, 16);
+            int valueB = Integer.parseInt(valB, 16);
+            int valueA = Integer.parseInt(valA, 16);
 
             seekBarR.setProgress(valueR);
             seekBarG.setProgress(valueG);
@@ -150,7 +151,7 @@ public class LightControl extends Fragment {
             // TODO: DEAL WITH FUNCTIONAL BUTTONS AS WELL
             // Do the appropriate action for the specific button.
             switch(view.getId()) {
-                case R.id.btnC_dimUp:
+                case R.id.btnD_dimUp:
                     alphaInt = Integer.parseInt(valueA, 16);
                     if(alphaInt < 255) {
                         if(alphaInt + alphaStep > 255) {
@@ -162,21 +163,21 @@ public class LightControl extends Fragment {
                     }
                     break;
                 case R.id.btnC_red:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.red));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.red));
                     break;
                 case R.id.btnC_lightRed:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightRed));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightRed));
                     break;
                 case R.id.btnC_orange:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.orange));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.orange));
                     break;
                 case R.id.btnC_lightOrange:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightOrange));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightOrange));
                     break;
                 case R.id.btnC_yellow:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.yellow));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.yellow));
                     break;
-                case R.id.btnF_dimDown:
+                case R.id.btnD_dimDown:
                     alphaInt = Integer.parseInt(valueA, 16);
                     if(alphaInt > 0) {
                         if(alphaInt - alphaStep < 0) {
@@ -188,43 +189,43 @@ public class LightControl extends Fragment {
                     }
                     break;
                 case R.id.btnC_green:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.green));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.green));
                     break;
                 case R.id.btnC_lightGreen:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightGreen));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightGreen));
                     break;
                 case R.id.btnC_cyan:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.cyan));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.cyan));
                     break;
                 case R.id.btnC_lightTurquoise:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightTurquoise));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightTurquoise));
                     break;
                 case R.id.btnC_turquoise:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.turquoise));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.turquoise));
                     break;
                 case R.id.btnF_off:
 
                     break;
                 case R.id.btnC_blue:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.blue));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.blue));
                     break;
                 case R.id.btnC_lightBlue:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightBlue));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.lightBlue));
                     break;
                 case R.id.btnC_violet:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.violet));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.violet));
                     break;
                 case R.id.btnC_purple:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.purple));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.purple));
                     break;
                 case R.id.btnC_pink:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.pink));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.pink));
                     break;
                 case R.id.btnF_on:
 
                     break;
                 case R.id.btnC_white:
-                    color = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.white));
+                    buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.white));
                     break;
                 case R.id.btnF_flash:
                     functionCode = Constants.LIGHT_CONTROL + Constants.LT_FLASH;
@@ -246,16 +247,25 @@ public class LightControl extends Fragment {
             * This is to avoid sending data multiple times.
             */
             if(view.getTag().toString().contains("btnC_")) {
-                if(!view.getTag().toString().contains("dim")) {
-                    color = color.substring(2, 8) + valueA;
-                } else {
-                    color = color.substring(0, 6) + valueA;
-                }
                 if(!functionCode.equals(Constants.LIGHT_CONTROL)) {
                     functionCode = Constants.LIGHT_CONTROL;
                 }
-                setSeekBarProgress(color);
+                valueR = buttonColor.substring(2, 4);
+                valueG = buttonColor.substring(4, 6);
+                valueB = buttonColor.substring(6, 8);
+
+                Log.d("LIGHT", "Colorbutton clicked");
+
+                setSeekBarProgress(valueR, valueG, valueB, valueA);
                 mListener.sendData(valueRGBA);
+            } else if(view.getTag().toString().contains("btnD_")) {
+                Log.d("LIGHT", functionCode);
+                if(functionCode.equals(Constants.LIGHT_CONTROL)) {
+                    setSeekBarProgress(valueR, valueG, valueB, valueA);
+                    mListener.sendData(functionCode + valueR + valueG + valueB + valueA);
+                } else {
+                    mListener.sendData(functionCode + valueA);
+                }
             } else if(view.getTag().toString().contains("btnF_")) {
                 dataToSend = (functionCode + valueA);
                 mListener.sendData(dataToSend);

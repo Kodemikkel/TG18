@@ -43,7 +43,7 @@ class AppHandler extends Handler {
                         while (bufferedReader.readLine() != null) {
                             lines++;
                         }
-                        outputStream = ((lines > 15) ? activity.openFileOutput(FILENAME, Context.MODE_PRIVATE) :
+                        outputStream = ((lines > 10) ? activity.openFileOutput(FILENAME, Context.MODE_PRIVATE) :
                                 activity.openFileOutput(FILENAME, Context.MODE_APPEND));
                     } catch (FileNotFoundException fileException) {
                         try {
