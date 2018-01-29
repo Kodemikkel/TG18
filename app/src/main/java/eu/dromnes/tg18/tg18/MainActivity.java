@@ -30,10 +30,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     private final static String TAG = "MainActivity";
 
     final AppHandler handler = new AppHandler(this);
-    private BtService btService = null;
+    private BtService btService;
 
-    BtSettings btSettings = null;
-    StatusLog statusLog = null;
+    BtSettings btSettings;
+    StatusLog statusLog;
+    LightControl lightControl;
+    HeightControl heightControl;
+    PcControl pcControl;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,19 +46,19 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
 
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.popBackStack();
-            btSettings = null;
-            statusLog = null;
+
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
             switch (item.getItemId()) {
                 case R.id.navigation_lightControl:
-                    transaction.replace(R.id.content, new LightControl()).commit();
+                    transaction.replace(R.id.content, lightControl).commit();
                     return true;
                 case R.id.navigation_heightControl:
-                    transaction.replace(R.id.content, new HeightControl()).commit();
+                    transaction.replace(R.id.content, heightControl).commit();
                     return true;
                 case R.id.navigation_pcControl:
-                    transaction.replace(R.id.content, new PcControl()).commit();
+                    transaction.replace(R.id.content, pcControl).commit();
                     return true;
             }
             return false;
@@ -104,9 +107,15 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        lightControl = new LightControl();
+        heightControl = new HeightControl();
+        pcControl = new PcControl();
+        btSettings = new BtSettings();
+        statusLog = new StatusLog();
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content, new LightControl()).commit();
+        transaction.replace(R.id.content, lightControl).commit();
 
         btService = new BtService(handler);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -129,24 +138,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 BtSettings btSettingsFrag = (BtSettings) fragmentManager.findFragmentByTag("btSettings");
-                if(btSettings == null) {
-                    btSettings = new BtSettings();
-                    statusLog = new StatusLog();
-                }
-                if(btSettingsFrag == null) {
+
+                if(btSettingsFrag == null || !btSettingsFrag.isVisible()) {
                     transaction.replace(R.id.content, btSettings, "btSettings");
                     transaction.add(R.id.content, statusLog, "statusLog");
                     transaction.addToBackStack(null);
                     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     transaction.commit();
-                } else {
-                    if(!btSettingsFrag.isVisible()) {
-                        transaction.replace(R.id.content, btSettings, "btSettings");
-                        transaction.add(R.id.content, statusLog, "statusLog");
-                        transaction.addToBackStack(null);
-                        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        transaction.commit();
-                    }
                 }
                 return true;
             default:
@@ -167,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         unregisterReceiver(btStateReceiver);
     }
 
+    // TODO: REMOVING THIS MIGHT POSSIBLY KEEP BT-CONNECTION AFTER APP CLOSES - NEED TESTING
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -223,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     }
 
     public void sendData(String dataToSend) {
+        dataToSend = dataToSend.toUpperCase();
         String[] dataCode = DataFormatter.readData(dataToSend);
         switch(dataCode[0]) {
             case Constants.INTERNAL:

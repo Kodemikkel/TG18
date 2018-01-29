@@ -17,12 +17,14 @@ public class LightControl extends Fragment {
     private String valueG = "00";
     private String valueB = "00";
     private String valueA = "00";
-    private String valueRGBA;
+    private String functionCode = null;
 
     private SeekBar seekBarR;
     private SeekBar seekBarG;
     private SeekBar seekBarB;
     private SeekBar seekBarA;
+
+    private boolean seekBarsEnabled = true;
 
     private OnFragmentInteractionListener mListener;
 
@@ -41,6 +43,13 @@ public class LightControl extends Fragment {
         // Inflate the layout for this fragment.
         View view = inflater.inflate(R.layout.fragment_light_control, container, false);
 
+        if(savedInstanceState != null) {
+            valueR = savedInstanceState.getString("valueR");
+            valueG = savedInstanceState.getString("valueG");
+            valueB = savedInstanceState.getString("valueB");
+            valueA = savedInstanceState.getString("valueA");
+        }
+
         // Create a listener for buttons and seekBars.
         ButtonListener buttonListener = new ButtonListener();
         SeekBarListener seekBarListener = new SeekBarListener();
@@ -56,7 +65,7 @@ public class LightControl extends Fragment {
         seekBarA.setOnSeekBarChangeListener(seekBarListener);
 
         // Set the onClickListener for all buttons to the one created previously.
-        Button btnDimUp = view.findViewById(R.id.btnD_dimUp);
+        Button btnDimUp = view.findViewById(R.id.btnF_dimUp);
         btnDimUp.setOnClickListener(buttonListener);
         Button btnRed = view.findViewById(R.id.btnC_red);
         btnRed.setOnClickListener(buttonListener);
@@ -68,7 +77,7 @@ public class LightControl extends Fragment {
         btnLightOrange.setOnClickListener(buttonListener);
         Button btnYellow = view.findViewById(R.id.btnC_yellow);
         btnYellow.setOnClickListener(buttonListener);
-        Button btnDimDown = view.findViewById(R.id.btnD_dimDown);
+        Button btnDimDown = view.findViewById(R.id.btnF_dimDown);
         btnDimDown.setOnClickListener(buttonListener);
         Button btnGreen = view.findViewById(R.id.btnC_green);
         btnGreen.setOnClickListener(buttonListener);
@@ -105,6 +114,8 @@ public class LightControl extends Fragment {
         Button btnSmooth = view.findViewById(R.id.btnF_smooth);
         btnSmooth.setOnClickListener(buttonListener);
 
+        enableSeekBars(seekBarsEnabled);
+
         return view;
     }
 
@@ -125,33 +136,38 @@ public class LightControl extends Fragment {
         mListener = null;
     }
 
+    // Set the values for each of the seekBars to match the color.
+    private void setSeekBarProgress(String valR, String valG, String valB, String valA) {
+        int valueR = Integer.parseInt(valR, 16);
+        int valueG = Integer.parseInt(valG, 16);
+        int valueB = Integer.parseInt(valB, 16);
+        int valueA = Integer.parseInt(valA, 16);
+
+        seekBarR.setProgress(valueR);
+        seekBarG.setProgress(valueG);
+        seekBarB.setProgress(valueB);
+        seekBarA.setProgress(valueA);
+    }
+
+    private void enableSeekBars(boolean enable) {
+        seekBarsEnabled = enable;
+        seekBarR.setEnabled(enable);
+        seekBarG.setEnabled(enable);
+        seekBarB.setEnabled(enable);
+    }
+
     // Listener for buttons.
     private class ButtonListener implements Button.OnClickListener {
-        String functionCode = Constants.LIGHT_CONTROL;
-        String dataToSend;
         String buttonColor = "00000000";
         int alphaStep = 32;
         int alphaInt = 0;
 
 
-        // Set the values for each of the seekBars to match the color.
-        private void setSeekBarProgress(String valR, String valG, String valB, String valA) {
-            int valueR = Integer.parseInt(valR, 16);
-            int valueG = Integer.parseInt(valG, 16);
-            int valueB = Integer.parseInt(valB, 16);
-            int valueA = Integer.parseInt(valA, 16);
-
-            seekBarR.setProgress(valueR);
-            seekBarG.setProgress(valueG);
-            seekBarB.setProgress(valueB);
-            seekBarA.setProgress(valueA);
-        }
-
         public void onClick(View view) {
             // TODO: DEAL WITH FUNCTIONAL BUTTONS AS WELL
             // Do the appropriate action for the specific button.
             switch(view.getId()) {
-                case R.id.btnD_dimUp:
+                case R.id.btnF_dimUp:
                     alphaInt = Integer.parseInt(valueA, 16);
                     if(alphaInt < 255) {
                         if(alphaInt + alphaStep > 255) {
@@ -177,7 +193,7 @@ public class LightControl extends Fragment {
                 case R.id.btnC_yellow:
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.yellow));
                     break;
-                case R.id.btnD_dimDown:
+                case R.id.btnF_dimDown:
                     alphaInt = Integer.parseInt(valueA, 16);
                     if(alphaInt > 0) {
                         if(alphaInt - alphaStep < 0) {
@@ -228,16 +244,16 @@ public class LightControl extends Fragment {
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.white));
                     break;
                 case R.id.btnF_flash:
-                    functionCode = Constants.LIGHT_CONTROL + Constants.LT_FLASH;
+                    functionCode = Constants.LT_FLASH;
                     break;
                 case R.id.btnF_strobe:
-                    functionCode = Constants.LIGHT_CONTROL + Constants.LT_STROBE;
+                    functionCode = Constants.LT_STROBE;
                     break;
                 case R.id.btnF_fade:
-                    functionCode = Constants.LIGHT_CONTROL + Constants.LT_FADE;
+                    functionCode = Constants.LT_FADE;
                     break;
                 case R.id.btnF_smooth:
-                    functionCode = Constants.LIGHT_CONTROL + Constants.LT_SMOOTH;
+                    functionCode = Constants.LT_SMOOTH;
                     break;
             }
             /*
@@ -246,29 +262,32 @@ public class LightControl extends Fragment {
             * but only after the seekBars have had their values set.
             * This is to avoid sending data multiple times.
             */
+
             if(view.getTag().toString().contains("btnC_")) {
-                if(!functionCode.equals(Constants.LIGHT_CONTROL)) {
-                    functionCode = Constants.LIGHT_CONTROL;
-                }
+                enableSeekBars(true);
+                functionCode = null;
                 valueR = buttonColor.substring(2, 4);
                 valueG = buttonColor.substring(4, 6);
                 valueB = buttonColor.substring(6, 8);
 
-                Log.d("LIGHT", "Colorbutton clicked");
-
                 setSeekBarProgress(valueR, valueG, valueB, valueA);
-                mListener.sendData(valueRGBA);
-            } else if(view.getTag().toString().contains("btnD_")) {
-                Log.d("LIGHT", functionCode);
-                if(functionCode.equals(Constants.LIGHT_CONTROL)) {
-                    setSeekBarProgress(valueR, valueG, valueB, valueA);
-                    mListener.sendData(functionCode + valueR + valueG + valueB + valueA);
-                } else {
-                    mListener.sendData(functionCode + valueA);
-                }
+                Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
             } else if(view.getTag().toString().contains("btnF_")) {
-                dataToSend = (functionCode + valueA);
-                mListener.sendData(dataToSend);
+                if(functionCode == null) {
+                    enableSeekBars(true);
+                    setSeekBarProgress(valueR, valueG, valueB, valueA);
+                    Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                    mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                } else {
+                    enableSeekBars(false);
+                    valueR = functionCode;
+                    valueG = "";
+                    valueB = "";
+                    seekBarA.setProgress(Integer.parseInt(valueA, 16));
+                    Log.d("DATATOSEND", Constants.LIGHT_CONTROL + functionCode + valueA);
+                    mListener.sendData(Constants.LIGHT_CONTROL + functionCode + valueA);
+                }
             }
         }
     }
@@ -280,26 +299,23 @@ public class LightControl extends Fragment {
         public void onStopTrackingTouch(SeekBar seekBar){}
 
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            switch (seekBar.getId()) {
-                case R.id.sldr_r:
-                    valueR = String.format("%02X", (0xFF & progress));
-                    break;
-                case R.id.sldr_g:
-                    valueG = String.format("%02X", (0xFF & progress));
-                    break;
-                case R.id.sldr_b:
-                    valueB = String.format("%02X", (0xFF & progress));
-                    break;
-                case R.id.sldr_a:
-                    valueA = String.format("%02X", (0xFF & progress));
-                    break;
-            }
-            valueRGBA = Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA;
-
-            // Check if the change is from a user
-            // If it is, we want to send the changes to the controller instantly
             if (fromUser) {
-                mListener.sendData(valueRGBA);
+                switch (seekBar.getId()) {
+                    case R.id.sldr_r:
+                        valueR = String.format("%02X", (0xFF & progress));
+                        break;
+                    case R.id.sldr_g:
+                        valueG = String.format("%02X", (0xFF & progress));
+                        break;
+                    case R.id.sldr_b:
+                        valueB = String.format("%02X", (0xFF & progress));
+                        break;
+                    case R.id.sldr_a:
+                        valueA = String.format("%02X", (0xFF & progress));
+                        break;
+                }
+                Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
             }
         }
     }
