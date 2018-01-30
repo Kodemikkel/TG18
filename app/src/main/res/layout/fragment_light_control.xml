@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="eu.dromnes.tg18.tg18.LightControl">
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_32sdp"
-        android:layout_marginEnd="@dimen/_7sdp"
-        android:layout_marginStart="@dimen/_7sdp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
         <GridLayout
+            android:id="@+id/lightButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal">
 
             <Button
@@ -317,39 +308,42 @@
                 android:textSize="10sp" />
 
         </GridLayout>
-
-        <SeekBar
-            android:id="@+id/sldr_r"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:max="255"
-            android:progressTint="@color/red"
-            android:thumbTint="@color/red" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/lightButtons">
 
-        <SeekBar
-            android:id="@+id/sldr_g"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:max="255"
-            android:progressTint="@color/green"
-            android:thumbTint="@color/green" />
+            <SeekBar
+                android:id="@+id/sldr_r"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:max="255"
+                android:progressTint="@color/red"
+                android:thumbTint="@color/red" />
 
-        <SeekBar
-            android:id="@+id/sldr_b"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:max="255"
-            android:progressTint="@color/blue"
-            android:thumbTint="@color/blue" />
+            <SeekBar
+                android:id="@+id/sldr_g"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:max="255"
+                android:progressTint="@color/green"
+                android:thumbTint="@color/green" />
 
-        <SeekBar
-            android:id="@+id/sldr_a"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_20sdp"
-            android:max="255"
-            android:progressTint="@color/white"
-            android:thumbTint="@color/white" />
+            <SeekBar
+                android:id="@+id/sldr_b"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:max="255"
+                android:progressTint="@color/blue"
+                android:thumbTint="@color/blue" />
 
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+            <SeekBar
+                android:id="@+id/sldr_a"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                android:max="255"
+                android:progressTint="@color/white"
+                android:thumbTint="@color/white" />
+        </LinearLayout>
+</RelativeLayout>

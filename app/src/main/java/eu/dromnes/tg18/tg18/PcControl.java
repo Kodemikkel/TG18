@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 // TODO: MAKE THIS FRAGMENT DO THE THINGS WE WANT
 
@@ -34,9 +35,9 @@ public class PcControl extends Fragment {
 
         ButtonTouchListener buttonTouchListener = new ButtonTouchListener();
 
-        Button btn_onOff = view.findViewById(R.id.btn_pcOnOff);
+        ImageButton btn_onOff = view.findViewById(R.id.btn_pcOnOff);
         btn_onOff.setOnTouchListener(buttonTouchListener);
-        Button btn_restart = view.findViewById(R.id.btn_pcRestart);
+        ImageButton btn_restart = view.findViewById(R.id.btn_pcRestart);
         btn_restart.setOnTouchListener(buttonTouchListener);
 
         return view;
