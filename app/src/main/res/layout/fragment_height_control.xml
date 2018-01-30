@@ -1,92 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="eu.dromnes.tg18.tg18.HeightControl">
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_64sdp"
-        android:layout_marginEnd="@dimen/_32sdp"
-        android:layout_marginStart="@dimen/_32sdp"
-        android:layout_marginTop="@dimen/_64sdp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <ImageButton
+        android:id="@+id/btn_topPosition"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:contentDescription="@string/btn_topPosition"
+        android:src="@drawable/ic_action_top" />
 
-        <ImageButton
-            android:id="@+id/btn_topPosition"
-            style="@android:style/Widget.ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/btn_topPosition"
-            android:src="@drawable/ic_action_top"
-            app:layout_constraintBottom_toTopOf="@+id/btn_up"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/btn_up"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_below="@id/btn_topPosition"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:contentDescription="@string/btn_up"
+        android:src="@drawable/ic_action_up" />
 
-        <ImageButton
-            android:id="@+id/btn_up"
-            style="@android:style/Widget.ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/btn_up"
-            android:src="@drawable/ic_action_up"
-            app:layout_constraintBottom_toTopOf="@+id/btn_stop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/btn_stop"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_below="@id/btn_up"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:contentDescription="@string/btn_stop"
+        android:src="@drawable/ic_action_stop" />
 
-        <ImageButton
-            android:id="@+id/btn_stop"
-            style="@android:style/Widget.ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/btn_stop"
-            android:src="@drawable/ic_action_stop"
-            app:layout_constraintBottom_toTopOf="@+id/btn_down"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/btn_down"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_below="@id/btn_stop"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:contentDescription="@string/btn_down"
+        android:src="@drawable/ic_action_down" />
 
-        <ImageButton
-            android:id="@+id/btn_down"
-            style="@android:style/Widget.ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/btn_down"
-            android:src="@drawable/ic_action_down"
-            app:layout_constraintBottom_toTopOf="@+id/btn_bottomPosition"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/btn_bottomPosition"
+        style="@android:style/Widget.ImageButton"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_below="@id/btn_down"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:contentDescription="@string/btn_bottomPosition"
+        android:src="@drawable/ic_action_bottom"/>
 
-        <ImageButton
-            android:id="@+id/btn_bottomPosition"
-            style="@android:style/Widget.ImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/btn_bottomPosition"
-            android:src="@drawable/ic_action_bottom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="@dimen/_390sdp" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
