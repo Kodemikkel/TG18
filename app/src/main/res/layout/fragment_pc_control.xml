@@ -69,6 +69,7 @@
         android:backgroundTint="@color/lightRed"
         android:contentDescription="@string/btn_pcOnOff"
         android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_action_power" />
 
     <ImageButton
@@ -83,6 +84,7 @@
         android:backgroundTint="@color/white"
         android:contentDescription="@string/btn_pcRestart"
         android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_action_restart" />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package eu.dromnes.tg18.tg18;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class StatusLog extends Fragment {
         View view = inflater.inflate(R.layout.fragment_status_log, container, false);
 
         statusLog = view.findViewById(R.id.statusLog);
+        statusLog.setMovementMethod(new ScrollingMovementMethod());
         appendTextFromFile(AppHandler.FILENAME);
 
         return view;

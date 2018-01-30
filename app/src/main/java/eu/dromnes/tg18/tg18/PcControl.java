@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-// TODO: MAKE THIS FRAGMENT DO THE THINGS WE WANT
-
 public class PcControl extends Fragment {
 
     private OnFragmentInteractionListener mListener;

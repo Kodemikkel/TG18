@@ -1,23 +1,18 @@
 package eu.dromnes.tg18.tg18;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.view.menu.ActionMenuItemView;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
+import eu.dromnes.tg18.tg18.R.drawable;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 
 class AppHandler extends Handler {
     private final WeakReference<MainActivity> activity;
-    private String logEntry = "This is a test for status log\n";
     final static String FILENAME = "tg18_status_log";
 
     AppHandler(MainActivity activity) {
@@ -28,99 +23,71 @@ class AppHandler extends Handler {
     public void handleMessage(Message msg) {
         MainActivity activity = this.activity.get();
         if(activity != null) {
-            TextView statusLog = activity.findViewById(R.id.statusLog);
+            ImageView btConnected = activity.findViewById(R.id.bt_connected);
+            ImageView btConnecting = activity.findViewById(R.id.bt_searching);
+            ImageView btDisconnected = activity.findViewById(R.id.bt_disabled);
 
             switch(msg.what) {
                 // Indicates that the message is a status message, and should probably be displayed
                 case Constants.MESSAGE_STATUS:
-                    FileOutputStream outputStream = null;
-                    String textToLog = "";
-                    try {
-                        FileInputStream inputStream = activity.openFileInput(FILENAME);
-                        InputStreamReader reader = new InputStreamReader(inputStream);
-                        BufferedReader bufferedReader = new BufferedReader(reader);
-                        int lines = 0;
-                        while (bufferedReader.readLine() != null) {
-                            lines++;
-                        }
-                        outputStream = ((lines > 10) ? activity.openFileOutput(FILENAME, Context.MODE_PRIVATE) :
-                                activity.openFileOutput(FILENAME, Context.MODE_APPEND));
-                    } catch (FileNotFoundException fileException) {
-                        try {
-                            activity.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                        } catch (FileNotFoundException newFileException) {
-                            Log.e("FILEEXCEPTION", "Failed to create file " + newFileException);
-                        }
-                    } catch (IOException ioException) {
-                        Log.e("IOEXCEPTION", "Failed to read line " + ioException);
-                    }
-
                     switch(msg.arg1) {
                         // Indicates that the status message is for Bluetooth
                         case Constants.BLUETOOTH:
                             switch(msg.arg2) {
                                 case Constants.BT_TURNED_ON:
                                     Log.d("HANDLER_BT_TURNED_ON", "Bluetooth turned on");
-                                    textToLog = "Bluetooth turned on";
                                     break;
                                 case Constants.BT_TURNED_OFF:
                                     Log.d("HANDLER_BT_TURNED_OFF", "Bluetooth turned off");
-                                    textToLog = "Bluetooth turned off";
                                     break;
                                 case Constants.BT_OFF:
                                     Log.d("HANDLER_BT_OFF", "Bluetooth disabled");
-                                    textToLog = "Bluetooth disabled";
                                     break;
                                 case Constants.BT_ON:
                                     Log.d("HANDLER_BT_ON", "Bluetooth enabled");
-                                    textToLog = "Bluetooth enabled";
                                     break;
                                 case Constants.BT_DEVICE_NAME:
                                     String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
                                     Log.d("HANDLER_BT_DEVICE_NAME", "Device name");
-                                    textToLog = "Device name: " + deviceName;
                                     break;
                                 case BtService.STATE_SEARCHING:
                                     Log.d("HANDLER_STATE_SEARCHING", "Searching...");
-                                    textToLog = "Searching...";
+                                    btDisconnected.setVisibility(View.GONE);
+                                    btConnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.VISIBLE);
                                     break;
                                 case BtService.STATE_CONNECTING:
                                     Log.d("HANDLER_STATE_CONNECTING", "Connecting...");
-                                    textToLog = "Connecting...";
+                                    btDisconnected.setVisibility(View.GONE);
+                                    btConnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.VISIBLE);
                                     break;
                                 case BtService.STATE_CONNECTED:
                                     Log.d("HANDLER_STATE_CONNECTED", "Connected");
-                                    textToLog = "Connected";
+                                    btDisconnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.GONE);
+                                    btConnected.setVisibility(View.VISIBLE);
                                     break;
                                 case BtService.CONNECTION_FAILED:
                                     Log.d("HANDLER_CONNECTION_FAILED", "Connection failed");
-                                    textToLog = "Connection failed";
+                                    btConnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.GONE);
+                                    btDisconnected.setVisibility(View.VISIBLE);
                                     break;
                                 case BtService.CONNECTION_LOST:
                                     Log.d("HANDLER_CONNECTION_LOST", "Connection lost");
-                                    textToLog = "Connection lost";
+                                    btConnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.GONE);
+                                    btDisconnected.setVisibility(View.VISIBLE);
                                     break;
                                 case BtService.DISCONNECTED:
                                     Log.d("HANDLER_DISCONNECTED", "Disconnected");
-                                    textToLog = "Disconnected";
+                                    btConnected.setVisibility(View.GONE);
+                                    btConnecting.setVisibility(View.GONE);
+                                    btDisconnected.setVisibility(View.VISIBLE);
                                     break;
                             }
                             break;
-                    }
-                    textToLog = textToLog + "\n";
-                    if(outputStream != null) {
-                        try {
-                            outputStream.write((textToLog).getBytes());
-                            outputStream.close();
-                        } catch (Exception fileException) {
-                            Log.e("FILEEXCEPTION", "Failed closing output stream " + fileException);
-                        }
-                    }
-                    if(statusLog != null) {
-                        if (statusLog.getLayout().getLineCount() > 15) {
-                            statusLog.setText("");
-                        }
-                        statusLog.append(textToLog);
                     }
                     break;
 

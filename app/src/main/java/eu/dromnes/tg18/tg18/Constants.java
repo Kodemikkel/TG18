@@ -1,7 +1,6 @@
 package eu.dromnes.tg18.tg18;
 
 public interface Constants {
-    // TODO: CREATE A SYSTEM FOR FORMATTING AND READING MESSAGE_DATA CODES BOTH INTERNALLY AND EXTERNALLY
     // TODO: GET A SYSTEM FOR HANDLER CONSTANTS
 
     // HANDLER CONSTANTS //
@@ -58,6 +57,7 @@ public interface Constants {
 
 
     // DATA CODES USED TO TRANSMIT DATA //
+
         // LIGHT CONTROL FUNCTION CODES //
         // Combine with prefix and a alphaVal value to form a complete data code
     String LT_DIMUP = "";
@@ -85,5 +85,6 @@ public interface Constants {
     String PC_ONOFF_RELEASE = "H0000000";
     String PC_RESTART = "I0000000";
     String PC_RESTART_RELEASE = "J0000000";
+
     //////////////////////////////////////
 }

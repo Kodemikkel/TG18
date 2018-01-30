@@ -16,8 +16,6 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
-// TODO: CHANGE THE MESSAGES SENT TO THE HANDLER SO THAT WE CAN UPDATE THE UI INSTEAD OF JUST SHOWING TOASTS
-
 class BtService {
     private static final String TAG = "BtService";
 
@@ -55,6 +53,10 @@ class BtService {
         }
         this.handler = handler;
         this.currentState = STATE_NONE;
+    }
+
+    int getState() {
+        return currentState;
     }
 
     synchronized private void changeState(int state) {

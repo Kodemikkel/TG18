@@ -12,8 +12,6 @@ import android.util.Log;
 
 import java.util.List;
 
-// TODO: IF POSSIBLE; GET A CLEANER WAY OF DEALING WITH PREFERENCES
-
 public class BtSettings extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "BtSettings";
@@ -93,11 +91,6 @@ public class BtSettings extends PreferenceFragment
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch(key) {
-            case KEY_PREF_AUTO_BLUETOOTH:
-                if(sharedPreferences.getBoolean(key, false)) {
-                    changeBtState(true);
-                }
-                break;
             case KEY_PREF_SELECT_PI:
                 listPref.setTitle(listPref.getEntry());
                 mListener.changeRPi(listPref.getValue());

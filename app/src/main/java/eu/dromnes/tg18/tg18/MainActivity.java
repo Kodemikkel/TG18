@@ -3,6 +3,7 @@ package eu.dromnes.tg18.tg18;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,10 +20,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 
 import java.nio.charset.StandardCharsets;
-
-// TODO: FIND A WAY TO DISPLAY STATUS TO THE USER BY NOT JUST USING TOASTS
 
 public class MainActivity extends AppCompatActivity implements LightControl.OnFragmentInteractionListener,
         HeightControl.OnFragmentInteractionListener, PcControl.OnFragmentInteractionListener, BtSettings.OnFragmentInteractionListener {
@@ -33,10 +35,13 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     private BtService btService;
 
     BtSettings btSettings;
-    StatusLog statusLog;
     LightControl lightControl;
     HeightControl heightControl;
     PcControl pcControl;
+
+    ImageView btConnected;
+    ImageView btConnecting;
+    ImageView btDisabled;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -111,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         heightControl = new HeightControl();
         pcControl = new PcControl();
         btSettings = new BtSettings();
-        statusLog = new StatusLog();
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -122,6 +126,22 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         Log.d("PREFS", sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
         if(sharedPrefs.getBoolean(BtSettings.KEY_PREF_AUTO_BLUETOOTH, false)) {
             bluetoothStateHandler(Constants.INTERNAL + Constants.BT_TURN_ON);
+        }
+
+        btConnected = findViewById(R.id.bt_connected);
+        btConnecting = findViewById(R.id.bt_searching);
+        btDisabled = findViewById(R.id.bt_disabled);
+
+        btConnected.setVisibility(View.GONE);
+        btConnecting.setVisibility(View.GONE);
+        btDisabled.setVisibility(View.GONE);
+
+        if(btService.getState() == BtService.STATE_NONE) {
+            btDisabled.setVisibility(View.VISIBLE);
+        } else if(btService.getState() == BtService.STATE_CONNECTING || btService.getState() == BtService.STATE_SEARCHING) {
+            btConnecting.setVisibility(View.VISIBLE);
+        } else if(btService.getState() == BtService.STATE_CONNECTED) {
+            btConnected.setVisibility(View.VISIBLE);
         }
     }
 
@@ -141,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
 
                 if(btSettingsFrag == null || !btSettingsFrag.isVisible()) {
                     transaction.replace(R.id.content, btSettings, "btSettings");
-                    transaction.add(R.id.content, statusLog, "statusLog");
                     transaction.addToBackStack(null);
                     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                     transaction.commit();
@@ -175,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         }
         if(btSettings != null) {
             btSettings = null;
-            statusLog = null;
         }
     }
 

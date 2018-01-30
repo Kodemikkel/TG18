@@ -164,7 +164,7 @@ public class LightControl extends Fragment {
 
 
         public void onClick(View view) {
-            // TODO: DEAL WITH FUNCTIONAL BUTTONS AS WELL
+            // TODO: DEAL WITH ON/OFF BUTTONS
             // Do the appropriate action for the specific button.
             switch(view.getId()) {
                 case R.id.btnF_dimUp:
