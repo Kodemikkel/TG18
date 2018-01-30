@@ -1,5 +1,6 @@
 <application>
-  <component name="EditorSettings">
-    <option name="USE_SOFT_WRAPS" value="" />
+  <component name="TodoConfiguration">
+    <pattern pattern="\btodo\b.*" />
+    <pattern pattern="\bfixme\b.*" />
   </component>
 </application>
