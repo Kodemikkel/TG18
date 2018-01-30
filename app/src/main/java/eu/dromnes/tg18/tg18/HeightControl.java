@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 // TODO: MAKE THIS FRAGMENT DO THE THINGS WE WANT
 
@@ -36,15 +37,15 @@ public class HeightControl extends Fragment {
         ButtonListener buttonListener = new ButtonListener();
         ButtonTouchListener buttonTouchListener = new ButtonTouchListener();
 
-        Button btn_top = view.findViewById(R.id.btn_topPosition);
+        ImageButton btn_top = view.findViewById(R.id.btn_topPosition);
         btn_top.setOnClickListener(buttonListener);
-        Button btn_up = view.findViewById(R.id.btn_up);
+        ImageButton btn_up = view.findViewById(R.id.btn_up);
         btn_up.setOnTouchListener(buttonTouchListener);
-        Button btn_stop = view.findViewById(R.id.btn_stop);
+        ImageButton btn_stop = view.findViewById(R.id.btn_stop);
         btn_stop.setOnClickListener(buttonListener);
-        Button btn_down = view.findViewById(R.id.btn_down);
+        ImageButton btn_down = view.findViewById(R.id.btn_down);
         btn_down.setOnTouchListener(buttonTouchListener);
-        Button btn_bottom = view.findViewById(R.id.btn_bottomPosition);
+        ImageButton btn_bottom = view.findViewById(R.id.btn_bottomPosition);
         btn_bottom.setOnClickListener(buttonListener);
 
         return view;
@@ -116,6 +117,7 @@ public class HeightControl extends Fragment {
                     }
                     break;
             }
+            Log.d("DATATOSEND (CLICK)", dataToSend);
             return true;
         }
     }
