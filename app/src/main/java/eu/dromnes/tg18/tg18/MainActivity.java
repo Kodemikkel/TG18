@@ -3,6 +3,8 @@ package eu.dromnes.tg18.tg18;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -13,6 +15,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
     ImageView btConnected;
     ImageView btConnecting;
     ImageView btDisabled;
+
+    NotificationManagerCompat notificationManager;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -143,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         } else if(btService.getState() == BtService.STATE_CONNECTED) {
             btConnected.setVisibility(View.VISIBLE);
         }
+
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     @Override
@@ -239,30 +247,62 @@ public class MainActivity extends AppCompatActivity implements LightControl.OnFr
         btService.connectToController(sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
     }
 
-    public void sendData(String dataToSend) {
-        dataToSend = dataToSend.toUpperCase();
-        String[] dataCode = DataFormatter.readData(dataToSend);
-        switch(dataCode[0]) {
+    public void reconnect() {
+        if(btService.getState() != BtService.STATE_CONNECTED && btService.getState() != BtService.STATE_CONNECTING) {
+            Log.d("MAIN", Integer.toString(btService.getState()));
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+            btService.connectToController(sharedPrefs.getString(BtSettings.KEY_PREF_SELECT_PI, "0"));
+        }
+    }
+
+    public void handleData(String data, boolean send) {
+        data = data.toUpperCase();
+        switch(data.substring(0, 3)) {
             case Constants.INTERNAL:
             // Any data that should be dealt with internally
                 break;
             case Constants.SYSTEM:
             // Any data that should be sent over Bluetooth (not the ones listed below)
+                if(!send) {
+                    if(data.equals(Constants.SODA_LOW)) {
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "0")
+                                .setSmallIcon(R.drawable.ic_alert_soda)
+                                .setContentTitle("Soda dispenser")
+                                .setContentText("Stock up on soda!")
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+                        notificationManager.notify(0, mBuilder.build());
+                    } else if(data.equals(Constants.SODA_HIGH)) {
+                        notificationManager.cancel(0);
+                    }
+                }
                 break;
             case Constants.LIGHT_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as light control
-                byte[] ltSend = dataToSend.getBytes(StandardCharsets.UTF_8);
-                btService.write(ltSend);
+                if(send) {
+                    byte[] ltSend = data.getBytes(StandardCharsets.UTF_8);
+                    btService.write(ltSend);
+                } else {
+                    if(!data.substring(3, 4).matches("([0-F])")) {
+                        lightControl.setMode(data.substring(3, data.length() - 2), data.substring(data.length() - 2, data.length()));
+                    } else {
+                        lightControl.setSeekBarProgress(data.substring(3, 5), data.substring(5, 7), data.substring(7, 9), data.substring(9, 11));
+                    }
+                }
                 break;
             case Constants.HEIGHT_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as height control
-                byte[] htSend = dataToSend.getBytes(StandardCharsets.UTF_8);
-                btService.write(htSend);
+                if(send) {
+                    byte[] htSend = data.getBytes(StandardCharsets.UTF_8);
+                    btService.write(htSend);
+                }
                 break;
             case Constants.PC_CONTROL:
             // Any data that should be sent over Bluetooth and recognized as pc control
-                byte[] pcSend = dataToSend.getBytes(StandardCharsets.UTF_8);
-                btService.write(pcSend);
+                if(send) {
+                    byte[] pcSend = data.getBytes(StandardCharsets.UTF_8);
+                    btService.write(pcSend);
+                }
                 break;
         }
     }

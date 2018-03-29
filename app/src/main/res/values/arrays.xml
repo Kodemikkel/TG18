@@ -9,11 +9,11 @@
         <item>Raspberry Pi F</item>
     </string-array>
     <string-array name="raspberry_pi_addresses">
-        <item>1</item>
-        <item>2</item>
-        <item>B8:27:EB:41:BD:A0</item>
+        <item>B8:27:EB:C2:F9:C6</item>
+        <item>B8:27:EB:66:90:73</item>
+        <item>B8:27:EB:8A:E1:6C</item>
+        <item>B8:27:EB:86:0A:A5</item>
         <item>B8:27:EB:14:BF:22</item>
-        <item>5</item>
-        <item>6</item>
+        <item>B8:27:EB:41:BD:A0</item>
     </string-array>
 </resources>

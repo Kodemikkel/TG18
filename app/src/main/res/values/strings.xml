@@ -36,6 +36,8 @@
 
     <string name="btn_settings">Settings</string>
 
+    <string name="btn_reconnect">Reconnect</string>
+
     <string name="swc_autoBt">Automatically connect to controller</string>
     <string name="swc_autoBt_summary">Automatically turn on Bluetooth and connect to the controller on app startup</string>
     <string name="swc_enableBt">Turn on Bluetooth</string>

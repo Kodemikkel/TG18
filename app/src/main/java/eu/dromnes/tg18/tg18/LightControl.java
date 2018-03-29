@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 public class LightControl extends Fragment {
@@ -16,7 +17,7 @@ public class LightControl extends Fragment {
     private String valueR = "00";
     private String valueG = "00";
     private String valueB = "00";
-    private String valueA = "00";
+    private String valueA = "FF";
     private String functionCode = null;
 
     private SeekBar seekBarR;
@@ -35,6 +36,7 @@ public class LightControl extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("ONCREATE", "ONCREATE CALLED");
     }
 
     @Override
@@ -42,13 +44,6 @@ public class LightControl extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment.
         View view = inflater.inflate(R.layout.fragment_light_control, container, false);
-
-        if(savedInstanceState != null) {
-            valueR = savedInstanceState.getString("valueR");
-            valueG = savedInstanceState.getString("valueG");
-            valueB = savedInstanceState.getString("valueB");
-            valueA = savedInstanceState.getString("valueA");
-        }
 
         // Create a listener for buttons and seekBars.
         ButtonListener buttonListener = new ButtonListener();
@@ -65,7 +60,7 @@ public class LightControl extends Fragment {
         seekBarA.setOnSeekBarChangeListener(seekBarListener);
 
         // Set the onClickListener for all buttons to the one created previously.
-        Button btnDimUp = view.findViewById(R.id.btnF_dimUp);
+        ImageButton btnDimUp = view.findViewById(R.id.btnF_dimUp);
         btnDimUp.setOnClickListener(buttonListener);
         Button btnRed = view.findViewById(R.id.btnC_red);
         btnRed.setOnClickListener(buttonListener);
@@ -77,7 +72,7 @@ public class LightControl extends Fragment {
         btnLightOrange.setOnClickListener(buttonListener);
         Button btnYellow = view.findViewById(R.id.btnC_yellow);
         btnYellow.setOnClickListener(buttonListener);
-        Button btnDimDown = view.findViewById(R.id.btnF_dimDown);
+        ImageButton btnDimDown = view.findViewById(R.id.btnF_dimDown);
         btnDimDown.setOnClickListener(buttonListener);
         Button btnGreen = view.findViewById(R.id.btnC_green);
         btnGreen.setOnClickListener(buttonListener);
@@ -89,7 +84,7 @@ public class LightControl extends Fragment {
         btnLightTurquoise.setOnClickListener(buttonListener);
         Button btnTurquoise = view.findViewById(R.id.btnC_turquoise);
         btnTurquoise.setOnClickListener(buttonListener);
-        Button btnOff = view.findViewById(R.id.btnF_off);
+        Button btnOff = view.findViewById(R.id.btn_off);
         btnOff.setOnClickListener(buttonListener);
         Button btnBlue = view.findViewById(R.id.btnC_blue);
         btnBlue.setOnClickListener(buttonListener);
@@ -101,7 +96,7 @@ public class LightControl extends Fragment {
         btnPurple.setOnClickListener(buttonListener);
         Button btnPink = view.findViewById(R.id.btnC_pink);
         btnPink.setOnClickListener(buttonListener);
-        Button btnOn = view.findViewById(R.id.btnF_on);
+        Button btnOn = view.findViewById(R.id.btn_on);
         btnOn.setOnClickListener(buttonListener);
         Button btnWhite = view.findViewById(R.id.btnC_white);
         btnWhite.setOnClickListener(buttonListener);
@@ -114,9 +109,27 @@ public class LightControl extends Fragment {
         Button btnSmooth = view.findViewById(R.id.btnF_smooth);
         btnSmooth.setOnClickListener(buttonListener);
 
-        enableSeekBars(seekBarsEnabled);
-
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if(valueR.matches("[0-F]")) {
+            seekBarR.setProgress(Integer.parseInt(valueR, 16));
+        }
+        if(valueG.matches("[0-F]")) {
+            seekBarG.setProgress(Integer.parseInt(valueG, 16));
+        }
+        if(valueB.matches("[0-F]")) {
+            seekBarB.setProgress(Integer.parseInt(valueB, 16));
+        }
+        if(valueA.matches("[0-F]")) {
+            seekBarA.setProgress(Integer.parseInt(valueA, 16));
+        }
+
+        enableSeekBars(seekBarsEnabled);
     }
 
     @Override
@@ -137,16 +150,18 @@ public class LightControl extends Fragment {
     }
 
     // Set the values for each of the seekBars to match the color.
-    private void setSeekBarProgress(String valR, String valG, String valB, String valA) {
-        int valueR = Integer.parseInt(valR, 16);
-        int valueG = Integer.parseInt(valG, 16);
-        int valueB = Integer.parseInt(valB, 16);
-        int valueA = Integer.parseInt(valA, 16);
+    void setSeekBarProgress(String valR, String valG, String valB, String valA) {
+        this.valueR = valR;
+        this.valueG = valG;
+        this.valueB = valB;
+        this.valueA = valA;
 
-        seekBarR.setProgress(valueR);
-        seekBarG.setProgress(valueG);
-        seekBarB.setProgress(valueB);
-        seekBarA.setProgress(valueA);
+        enableSeekBars(true);
+
+        seekBarR.setProgress(Integer.parseInt(valR, 16));
+        seekBarG.setProgress(Integer.parseInt(valG, 16));
+        seekBarB.setProgress(Integer.parseInt(valB, 16));
+        seekBarA.setProgress(Integer.parseInt(valA, 16));
     }
 
     private void enableSeekBars(boolean enable) {
@@ -156,11 +171,21 @@ public class LightControl extends Fragment {
         seekBarB.setEnabled(enable);
     }
 
+    void setMode(String mode, String alpha) {
+        this.functionCode = mode;
+        this.valueR = this.functionCode;
+        this.valueG = "";
+        this.valueB = "";
+        this.valueA = alpha;
+        seekBarA.setProgress(Integer.parseInt(valueA, 16));
+        enableSeekBars(false);
+    }
+
     // Listener for buttons.
     private class ButtonListener implements Button.OnClickListener {
         String buttonColor = "00000000";
         int alphaStep = 32;
-        int alphaInt = 0;
+        int alphaInt = Integer.parseInt(valueA, 16);
 
 
         public void onClick(View view) {
@@ -219,8 +244,8 @@ public class LightControl extends Fragment {
                 case R.id.btnC_turquoise:
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.turquoise));
                     break;
-                case R.id.btnF_off:
-
+                case R.id.btn_off:
+                    mListener.handleData(Constants.LIGHT_CONTROL + Constants.LT_OFF + valueA, true);
                     break;
                 case R.id.btnC_blue:
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.blue));
@@ -237,8 +262,8 @@ public class LightControl extends Fragment {
                 case R.id.btnC_pink:
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.pink));
                     break;
-                case R.id.btnF_on:
-
+                case R.id.btn_on:
+                    mListener.handleData(Constants.LIGHT_CONTROL + Constants.LT_ON + valueA, true);
                     break;
                 case R.id.btnC_white:
                     buttonColor = Integer.toHexString(ContextCompat.getColor(getContext(), R.color.white));
@@ -258,9 +283,7 @@ public class LightControl extends Fragment {
             }
             /*
             * Check if the button clicked is used to set a color.
-            * If so, we want to send the appropriate data to the controller,
-            * but only after the seekBars have had their values set.
-            * This is to avoid sending data multiple times.
+            * If so, we want to send the appropriate data to the controller
             */
 
             if(view.getTag().toString().contains("btnC_")) {
@@ -272,13 +295,13 @@ public class LightControl extends Fragment {
 
                 setSeekBarProgress(valueR, valueG, valueB, valueA);
                 Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
-                mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                mListener.handleData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA, true);
             } else if(view.getTag().toString().contains("btnF_")) {
                 if(functionCode == null) {
                     enableSeekBars(true);
                     setSeekBarProgress(valueR, valueG, valueB, valueA);
                     Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
-                    mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                    mListener.handleData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA, true);
                 } else {
                     enableSeekBars(false);
                     valueR = functionCode;
@@ -286,7 +309,7 @@ public class LightControl extends Fragment {
                     valueB = "";
                     seekBarA.setProgress(Integer.parseInt(valueA, 16));
                     Log.d("DATATOSEND", Constants.LIGHT_CONTROL + functionCode + valueA);
-                    mListener.sendData(Constants.LIGHT_CONTROL + functionCode + valueA);
+                    mListener.handleData(Constants.LIGHT_CONTROL + functionCode + valueA, true);
                 }
             }
         }
@@ -315,7 +338,7 @@ public class LightControl extends Fragment {
                         break;
                 }
                 Log.d("DATATOSEND", Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
-                mListener.sendData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA);
+                mListener.handleData(Constants.LIGHT_CONTROL + valueR + valueG + valueB + valueA, true);
             }
         }
     }
@@ -331,6 +354,6 @@ public class LightControl extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void sendData(String dataToSend);
+        void handleData(String dataToSend, boolean send);
     }
 }

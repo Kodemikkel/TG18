@@ -1,7 +1,6 @@
 package eu.dromnes.tg18.tg18;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -83,7 +82,7 @@ public class HeightControl extends Fragment {
                     break;
             }
             Log.d("DATATOSEND (CLICK)", dataToSend);
-            mListener.sendData(dataToSend);
+            mListener.handleData(dataToSend, true);
         }
     }
 
@@ -95,27 +94,26 @@ public class HeightControl extends Fragment {
                 case R.id.btn_up:
                     if(event.getAction() == MotionEvent.ACTION_DOWN) {
                         dataToSend = Constants.HEIGHT_CONTROL + Constants.HT_TOP;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         view.performClick();
                         dataToSend = Constants.HEIGHT_CONTROL + Constants.HT_UP;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     break;
                 case R.id.btn_down:
                     if(event.getAction() == MotionEvent.ACTION_DOWN) {
                         dataToSend = Constants.HEIGHT_CONTROL + Constants.HT_BOTTOM;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         view.performClick();
                         dataToSend = Constants.HEIGHT_CONTROL + Constants.HT_DOWN;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     break;
             }
-            Log.d("DATATOSEND (CLICK)", dataToSend);
             return true;
         }
     }
@@ -131,6 +129,6 @@ public class HeightControl extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void sendData(String dataToSend);
+        void handleData(String dataToSend, boolean send);
     }
 }

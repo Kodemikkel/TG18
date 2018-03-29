@@ -35,6 +35,15 @@ public class BtSettings extends PreferenceFragment
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
+        Preference button = findPreference(getString(R.string.btn_reconnect));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mListener.reconnect();
+                return true;
+            }
+        });
+
         listPref = (ListPreference)findPreference(KEY_PREF_SELECT_PI);
         enableBluetoothSwitch = (SwitchPreference) findPreference(KEY_PREF_ENABLE_BLUETOOTH);
         enableBluetoothSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -112,5 +121,6 @@ public class BtSettings extends PreferenceFragment
     public interface OnFragmentInteractionListener {
         void bluetoothStateHandler(String data);
         void changeRPi(String address);
+        void reconnect();
     }
 }

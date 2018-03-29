@@ -15,4 +15,7 @@
         android:entryValues="@array/raspberry_pi_addresses"
         android:key="pref_selectPi"
         android:title="Choose Raspberry Pi" />
+    <Preference android:title="Reconnect"
+        android:key="@string/btn_reconnect"
+        android:summary="Reconnect to the selected Pi"/>
 </PreferenceScreen>

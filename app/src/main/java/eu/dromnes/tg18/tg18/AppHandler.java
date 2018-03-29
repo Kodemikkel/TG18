@@ -28,7 +28,7 @@ class AppHandler extends Handler {
             ImageView btDisconnected = activity.findViewById(R.id.bt_disabled);
 
             switch(msg.what) {
-                // Indicates that the message is a status message, and should probably be displayed
+                // Indicates that the message is a status message
                 case Constants.MESSAGE_STATUS:
                     switch(msg.arg1) {
                         // Indicates that the status message is for Bluetooth
@@ -48,7 +48,7 @@ class AppHandler extends Handler {
                                     break;
                                 case Constants.BT_DEVICE_NAME:
                                     String deviceName = msg.getData().getString(Constants.DEVICE_NAME);
-                                    Log.d("HANDLER_BT_DEVICE_NAME", "Device name");
+                                    Log.d("HANDLER_BT_DEVICE_NAME", deviceName);
                                     break;
                                 case BtService.STATE_SEARCHING:
                                     Log.d("HANDLER_STATE_SEARCHING", "Searching...");
@@ -103,6 +103,7 @@ class AppHandler extends Handler {
                             // TODO: ADD CODE FOR DEALING WITH MESSAGE_DATA RETURNED FROM THE CONTROLLER
                             byte[] readBuffer = (byte[]) msg.obj;
                             String readData = new String(readBuffer, 0, msg.arg2);
+                            activity.handleData(readData, false);
                             Log.d("HANDLER_DATA_RECEIVED", readData);
                             break;
                     }
