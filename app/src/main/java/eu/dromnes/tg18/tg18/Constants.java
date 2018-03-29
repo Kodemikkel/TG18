@@ -62,8 +62,8 @@ public interface Constants {
         // Combine with prefix and a alphaVal value to form a complete data code
     String LT_DIMUP = "";
     String LT_DIMDN = "";
-    String LT_OFF = "";
-    String LT_ON = "";
+    String LT_OFF = "L00000";
+    String LT_ON = "K00000";
     String LT_FLASH = "G00000";
     String LT_STROBE = "H00000";
     String LT_FADE = "I00000";
@@ -85,6 +85,11 @@ public interface Constants {
     String PC_ONOFF_RELEASE = "H0000000";
     String PC_RESTART = "I0000000";
     String PC_RESTART_RELEASE = "J0000000";
+
+        // RETURN CODES //
+        // Codes used in messages sent from the controller
+    String SODA_LOW = ";1_G0000000";
+    String SODA_HIGH = ";1_H0000000";
 
     //////////////////////////////////////
 }

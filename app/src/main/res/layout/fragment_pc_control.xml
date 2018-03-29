@@ -66,11 +66,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_50sdp"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/lightRed"
+        android:backgroundTint="@color/mdRed"
         android:contentDescription="@string/btn_pcOnOff"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_action_power" />
+        android:src="@drawable/ic_power_black_24dp" />
 
     <ImageButton
         android:id="@+id/btn_pcRestart"
@@ -81,10 +81,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_50sdp"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/mdWhite"
         android:contentDescription="@string/btn_pcRestart"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_action_restart" />
+        android:src="@drawable/ic_restart_black_24dp" />
 
 </RelativeLayout>

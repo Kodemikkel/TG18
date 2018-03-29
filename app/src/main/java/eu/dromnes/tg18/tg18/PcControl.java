@@ -1,10 +1,8 @@
 package eu.dromnes.tg18.tg18;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,23 +65,23 @@ public class PcControl extends Fragment {
                 case R.id.btn_pcOnOff:
                     if(event.getAction() == MotionEvent.ACTION_DOWN) {
                         dataToSend = Constants.PC_CONTROL + Constants.PC_ONOFF;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         view.performClick();
                         dataToSend = Constants.PC_CONTROL + Constants.PC_ONOFF_RELEASE;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     break;
                 case R.id.btn_pcRestart:
                     if(event.getAction() == MotionEvent.ACTION_DOWN) {
                         dataToSend = Constants.PC_CONTROL + Constants.PC_RESTART;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     if(event.getAction() == MotionEvent.ACTION_UP) {
                         view.performClick();
                         dataToSend = Constants.PC_CONTROL + Constants.PC_RESTART_RELEASE;
-                        mListener.sendData(dataToSend);
+                        mListener.handleData(dataToSend, true);
                     }
                     break;
             }
@@ -102,6 +100,6 @@ public class PcControl extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void sendData(String dataToSend);
+        void handleData(String dataToSend, boolean send);
     }
 }

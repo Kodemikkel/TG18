@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/navigation_lightControl"
-        android:icon="@drawable/ic_action_lightbulb"
+        android:icon="@drawable/ic_lightbulb_black_24dp"
         android:title="@string/title_lightControl" />
 
     <item
         android:id="@+id/navigation_heightControl"
-        android:icon="@drawable/ic_action_height"
+        android:icon="@drawable/ic_height_black_24dp"
         android:title="@string/title_heightControl" />
 
     <item
         android:id="@+id/navigation_pcControl"
-        android:icon="@drawable/ic_action_power"
+        android:icon="@drawable/ic_power_black_24dp"
         android:title="@string/title_pcControl" />
 </menu>
