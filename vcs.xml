@@ -6,7 +6,12 @@
           <option name="url" value="http://github.com" />
           <option name="userName" value="martin.krisknut@hotmail.com" />
         </UrlAndUserName>
+        <UrlAndUserName>
+          <option name="url" value="https://github.com/Kodemikkel/job-app.git" />
+          <option name="userName" value="" />
+        </UrlAndUserName>
       </list>
     </option>
+    <option name="cloneParentDir" value="D:\Programming\Android" />
   </component>
 </application>
